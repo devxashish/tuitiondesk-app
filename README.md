@@ -9,7 +9,7 @@
 
 Click below to download the latest official release directly on your Android device:
 
-[![Download APK](https://img.shields.io/badge/Download-TuitionDesk.apk-0F766E?style=for-the-badge&logo=android&logoColor=white)](https://github.com/devxashish/tuitiondesk-core/releases/latest/download/TuitionDesk.apk)
+[![Download APK](https://img.shields.io/badge/Download-TuitionDesk.apk-0F766E?style=for-the-badge&logo=android&logoColor=white)](https://github.com/devxashish/tuitiondesk-app/releases/latest/download/TuitionDesk.apk)
 
 - **Version:** v1.0.0 (Release)
 - **Target OS:** Android 8.0 (Oreo) and above
@@ -31,7 +31,7 @@ Click below to download the latest official release directly on your Android dev
 
 ## 📲 How to Install on Android
 
-1. Tap **[Download TuitionDesk.apk](https://github.com/devxashish/tuitiondesk-core/releases/latest/download/TuitionDesk.apk)**.
+1. Tap **[Download TuitionDesk.apk](https://github.com/devxashish/tuitiondesk-app/releases/latest/download/TuitionDesk.apk)**.
 2. Open the downloaded `.apk` file from your notification panel or Downloads folder.
 3. If prompted, allow **"Install unknown apps"** for your browser.
 4. Tap **Install** and open **TuitionDesk**!
