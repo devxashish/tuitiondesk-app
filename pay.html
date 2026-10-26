@@ -3,9 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TuitionDesk - Instant UPI Payment & Fee Receipt</title>
+  <title>TuitionDesk - Instant UPI Payment & Verified Fee Receipt</title>
+  
+  <!-- SEO & Search Engine Optimization -->
+  <meta name="description" content="Secure instant UPI fee payment portal for tuition centers and coaching classes in India. 100% direct bank transfer with zero commission via Google Pay, PhonePe, Paytm, and BHIM.">
+  <meta name="keywords" content="tuition fee payment, upi qr code, tuitiondesk, coaching fees upi, gpay fee payment, phonepe coaching fees, paytm tuition payment">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://devxashish.github.io/tuitiondesk-app/pay.html">
+
+  <!-- OpenGraph Metadata (WhatsApp, Facebook, LinkedIn) -->
+  <meta property="og:title" content="TuitionDesk - 1-Tap UPI Fee Payment & Receipt">
+  <meta property="og:description" content="Pay tuition fees instantly with zero transaction charges via UPI QR code, Google Pay, PhonePe, or Paytm.">
+  <meta property="og:image" content="https://devxashish.github.io/tuitiondesk-app/icon-512.png">
+  <meta property="og:url" content="https://devxashish.github.io/tuitiondesk-app/pay.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TuitionDesk">
+  <meta property="og:locale" content="en_IN">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="TuitionDesk - Instant UPI Payment">
+  <meta name="twitter:description" content="Official student fee payment portal powered by TuitionDesk. Instant receipt & zero charges.">
+  <meta name="twitter:image" content="https://devxashish.github.io/tuitiondesk-app/icon-512.png">
+
+  <!-- LLM & AI Search Engine Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Invoice",
+    "name": "TuitionDesk Student Fee Receipt",
+    "description": "Instant 1-Tap UPI Fee Payment Portal for Coaching Classes in India",
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "TuitionDesk Coaching Network",
+      "url": "https://devxashish.github.io/tuitiondesk-app/"
+    },
+    "paymentMethod": "UPI",
+    "paymentStatus": "PaymentAction",
+    "totalPaymentDue": {
+      "@type": "PriceSpecification",
+      "priceCurrency": "INR"
+    }
+  }
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Pure client-side QR generator (zero third-party API dependencies) -->
+  <!-- Pure client-side QR generator (zero third-party server dependency) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4 font-sans antialiased">
@@ -59,20 +102,26 @@
       <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clip-rule="evenodd"></path>
       </svg>
-      <span>Zero Commission • Direct to Teacher Bank Account</span>
+      <span>Zero Commission • 100% Direct to Teacher Bank Account</span>
     </div>
   </div>
 
   <script>
+    // Safe text sanitization against DOM XSS
+    function safeText(str, fallback = '') {
+      if (!str) return fallback;
+      return String(str).replace(/[<>]/g, '').trim();
+    }
+
     // Parse URL parameters
     const params = new URLSearchParams(window.location.search);
-    const pa = params.get('pa') || 'tuitiondesk@okicici';
-    const pn = params.get('pn') || 'TuitionDesk Coaching';
-    const am = params.get('am') || '0';
-    const name = params.get('name') || 'Student';
-    const batch = params.get('batch') || 'Coaching Batch';
+    const pa = safeText(params.get('pa'), 'tuitiondesk@okicici');
+    const pn = safeText(params.get('pn'), 'TuitionDesk Coaching');
+    const am = safeText(params.get('am'), '0');
+    const name = safeText(params.get('name'), 'Student');
+    const batch = safeText(params.get('batch'), 'Coaching Batch');
 
-    // Populate UI
+    // Populate UI via textContent (immune to injection)
     document.getElementById('dispInstitute').textContent = pn;
     document.getElementById('dispStudent').textContent = name;
     document.getElementById('dispBatch').textContent = batch;
@@ -80,11 +129,11 @@
     document.getElementById('dispUpiId').textContent = pa;
 
     // Construct standard NPCI UPI Intent Link
-    const cleanName = name.replace(/\s+/g, '_');
+    const cleanName = encodeURIComponent(name.replace(/\s+/g, '_'));
     const upiLink = `upi://pay?pa=${encodeURIComponent(pa)}&pn=${encodeURIComponent(pn)}&am=${encodeURIComponent(am)}&tn=Fee_${cleanName}&cu=INR`;
     document.getElementById('btnGpay').href = upiLink;
 
-    // Generate local QR Code with QRCode.js (100% Client-side, 0 External Server Calls)
+    // Generate local QR Code with QRCode.js (100% Client-side canvas, 0 External Calls)
     new QRCode(document.getElementById("qrcode"), {
       text: upiLink,
       width: 200,

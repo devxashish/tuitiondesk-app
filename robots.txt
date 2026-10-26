@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://devxashish.github.io/tuitiondesk-app/sitemap.xml
