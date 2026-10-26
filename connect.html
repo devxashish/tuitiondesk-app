@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TuitionDesk - Connect WhatsApp Automation</title>
+  <title>TuitionDesk - Connect WhatsApp Official</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,10 +18,10 @@
       -webkit-tap-highlight-color: transparent;
     }
     .liquid-glass {
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.90);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.8);
       box-shadow: 0 10px 30px rgba(0, 122, 255, 0.08);
     }
     .ios-blue-gradient {
@@ -42,147 +41,74 @@
       <div class="inline-block relative">
         <img src="logo.png" alt="TuitionDesk 3D Logo" class="w-20 h-20 mx-auto rounded-3xl shadow-xl border-2 border-white/80 object-cover">
         <span class="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-600 text-white shadow-sm">
-          SETUP
+          LINK
         </span>
       </div>
       <div>
-        <h1 class="text-2xl font-black text-slate-900 tracking-tight">TuitionDesk WhatsApp Link</h1>
-        <p class="text-xs text-slate-500 font-medium mt-1">Official Multi-Tenant Background Automation Bridge</p>
+        <h1 class="text-2xl font-black text-slate-900 tracking-tight">TuitionDesk WhatsApp Setup</h1>
+        <p class="text-xs text-slate-500 font-medium mt-1">Official Multi-Device Background Automation Guide</p>
       </div>
     </div>
 
     <!-- Teacher Session Token Banner -->
     <div class="liquid-glass rounded-2xl p-4 border border-blue-100 flex items-center justify-between shadow-xs">
       <div class="space-y-0.5">
-        <span class="text-[10px] uppercase tracking-wider font-extrabold text-blue-600">Assigned Teacher Token</span>
+        <span class="text-[10px] uppercase tracking-wider font-extrabold text-blue-600">Teacher Profile Session</span>
         <div id="dispToken" class="font-mono font-bold text-xs text-slate-800">TCH_8818050651_TD26</div>
         <div id="dispName" class="text-[11px] text-slate-500 font-medium">TuitionDesk Coaching</div>
       </div>
-      <div id="badgeStatus" class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80 flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-        Waiting to Link
+      <div id="badgeStatus" class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200/80 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+        Official Link
       </div>
     </div>
 
-    <!-- MAIN LINKING CONTAINER -->
-    <div id="linkingContainer" class="space-y-4">
-
-      <!-- Navigation Tabs (Scan QR vs Same Phone) -->
-      <div class="bg-white/80 p-1.5 rounded-2xl flex border border-slate-200/70 shadow-xs">
-        <button id="tabScan" onclick="switchTab('scan')" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all ios-blue-gradient text-white shadow-xs">
-          📷 1. Scan QR Code
-        </button>
-        <button id="tabPhone" onclick="switchTab('phone')" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all text-slate-600 hover:text-slate-900">
-          📱 2. Same Phone Link
-        </button>
-      </div>
-
-      <!-- VIEW 1: SCAN QR (For Laptop, Desktop or 2nd Phone) -->
-      <div id="viewScan" class="liquid-glass rounded-3xl p-6 text-center space-y-5 border border-white">
-        <div>
-          <h2 class="text-base font-bold text-slate-900">Scan QR with WhatsApp</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Apne WhatsApp se is QR code ko scan karein</p>
-        </div>
-
-        <!-- Dynamic QR Code Frame -->
-        <div class="bg-white p-4 rounded-2xl inline-block shadow-inner border border-slate-200/80 relative">
-          <div id="qrcode" class="flex items-center justify-center min-w-[210px] min-h-[210px]"></div>
-          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div class="w-10 h-10 bg-white rounded-xl shadow-md p-1 border border-slate-100 flex items-center justify-center">
-              <img src="logo.png" class="w-8 h-8 rounded-lg">
-            </div>
-          </div>
-        </div>
-
-        <p class="text-[11px] text-slate-400 font-medium">QR auto-refreshes every 30 seconds • Encrypted Token Bridge</p>
-
-        <!-- Instructions -->
-        <div class="text-left bg-slate-50/80 p-4 rounded-2xl space-y-2 border border-slate-200/60 text-xs text-slate-700">
-          <div class="font-bold text-[11px] text-slate-900 uppercase tracking-wide">Kaise Scan Karein (Step-by-step):</div>
-          <div class="flex items-start gap-2">
-            <span class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</span>
-            <span>Apne phone me WhatsApp open karein.</span>
-          </div>
-          <div class="flex items-start gap-2">
-            <span class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</span>
-            <span>Top-Right me 3 dots (⋮) ya Settings par jayein.</span>
-          </div>
-          <div class="flex items-start gap-2">
-            <span class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</span>
-            <span><strong>Linked Devices</strong> choose karein.</span>
-          </div>
-          <div class="flex items-start gap-2">
-            <span class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">4</span>
-            <span><strong>Link a Device</strong> dabayein aur is QR ko scan karein.</span>
-          </div>
-        </div>
-
-        <!-- Manual Sim / Test Verify Button -->
-        <button onclick="confirmConnection()" class="w-full py-3 rounded-xl ios-green-gradient text-white text-xs font-bold shadow-md hover:opacity-95 transition-all">
-          ✓ Verify & Link WhatsApp Session
-        </button>
-      </div>
-
-      <!-- VIEW 2: SAME PHONE LINK (When opened directly on tutor's phone) -->
-      <div id="viewPhone" class="liquid-glass rounded-3xl p-6 text-center space-y-5 border border-white hidden">
-        <div>
-          <h2 class="text-base font-bold text-slate-900">Same Phone Linking</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Agar aap TuitionDesk aur WhatsApp ek hi phone me chala rahe hain</p>
-        </div>
-
-        <div class="bg-blue-50/80 p-5 rounded-2xl text-left border border-blue-100 space-y-3">
-          <div class="flex items-center gap-2 text-blue-700 font-bold text-xs">
-            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>Direct WhatsApp Deep-Link</span>
-          </div>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            Aapko QR scan karne ki zaroorat nahi hai. Niche diye gaye button par click karein. WhatsApp open hoga aur aapka background bot link ho jayega.
-          </p>
-        </div>
-
-        <!-- 1-Tap Button -->
-        <button onclick="triggerSamePhoneLink()" class="w-full py-3.5 rounded-xl ios-blue-gradient text-white text-xs font-bold shadow-md hover:opacity-95 flex items-center justify-center gap-2 transition-all">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.961.545 1.831.815 2.791.815 3.179 0 5.766-2.587 5.767-5.767.001-3.18-2.585-5.766-5.767-5.766zm0 10.366c-.846 0-1.637-.229-2.327-.648l-.167-.099-1.579.414.421-1.539-.108-.172c-.461-.734-.705-1.583-.705-2.556 0-2.535 2.062-4.598 4.598-4.598 2.534 0 4.597 2.063 4.597 4.598 0 2.535-2.063 4.598-4.597 4.598z"/>
-          </svg>
-          Open WhatsApp to Link on this Phone
-        </button>
-
-        <!-- Secondary Confirmation -->
-        <button onclick="confirmConnection()" class="w-full py-2.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-all">
-          Mark as Linked & Return to App
-        </button>
-      </div>
-
-    </div>
-
-    <!-- SUCCESS CELEBRATION CARD (HIDDEN INITIALLY) -->
-    <div id="successCard" class="liquid-glass rounded-3xl p-6 text-center space-y-4 border border-emerald-200 hidden">
-      <div class="w-16 h-16 rounded-full ios-green-gradient flex items-center justify-center mx-auto text-white shadow-lg">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-        </svg>
-      </div>
-
+    <!-- MAIN GUIDE CONTAINER -->
+    <div class="liquid-glass rounded-3xl p-6 space-y-5 border border-white">
       <div>
-        <h2 class="text-xl font-black text-slate-900">WhatsApp Successfully Linked!</h2>
-        <p class="text-xs text-slate-500 mt-1">TuitionDesk Automation Bot is now Active</p>
+        <h2 class="text-base font-bold text-slate-900">How to Link WhatsApp to TuitionDesk</h2>
+        <p class="text-xs text-slate-500 mt-0.5">WhatsApp security requires linking directly inside the Android App</p>
       </div>
 
-      <div class="bg-emerald-50/80 p-4 rounded-2xl text-left border border-emerald-100 text-xs text-emerald-800 space-y-1.5">
-        <div class="font-bold flex items-center gap-1.5">
-          <span>🎉 Setup Complete</span>
+      <!-- Step-by-Step Instructions -->
+      <div class="bg-blue-50/70 p-4 rounded-2xl space-y-3 border border-blue-100 text-xs text-slate-800">
+        <div class="font-bold text-[11px] text-blue-900 uppercase tracking-wide">Method 1: Same Phone Link (Recommended)</div>
+        <div class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</span>
+          <span>Apne phone me <strong>TuitionDesk App</strong> open karein.</span>
         </div>
-        <p>Aapka WhatsApp number successfully verify aur link ho chuka hai. Ab TuitionDesk app se automatic fee notices, attendance alerts aur test reports background me send hongi.</p>
+        <div class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</span>
+          <span>Top right me <strong>WhatsApp icon</strong> par tap karein.</span>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</span>
+          <span><strong>Same Phone Link</strong> tab chunein aur <em>"Tap Here to Enter Phone Number"</em> dabayein.</span>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">4</span>
+          <span>Apna 10 digit WhatsApp number daalein ➔ Screen par <strong>8-digit Pairing Code</strong> dikhega.</span>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">5</span>
+          <span>WhatsApp open karke ye 8-digit code daal dein ➔ App instantly background me link ho jayegi!</span>
+        </div>
       </div>
 
-      <div class="pt-2">
-        <button onclick="window.close()" class="w-full py-3.5 rounded-xl ios-blue-gradient text-white text-xs font-bold shadow-md">
-          Close this Window & Return to App
-        </button>
+      <div class="bg-slate-50 p-4 rounded-2xl space-y-3 border border-slate-200 text-xs text-slate-800">
+        <div class="font-bold text-[11px] text-slate-900 uppercase tracking-wide">Method 2: Scan QR with Another Device</div>
+        <p class="text-[11.5px] text-slate-600">
+          Agar aap kisi doosre phone ya laptop se scan karna chahte hain, to TuitionDesk app ke andar <strong>"Scan QR Code"</strong> tab par click karein. Wahan live, genuine WhatsApp Web QR load hoga jise WhatsApp camera turant scan kar lega.
+        </p>
       </div>
+
+      <!-- Action Button -->
+      <a href="https://github.com/devxashish/tuitiondesk-app/releases/tag/v1.0.0" class="w-full py-3.5 rounded-xl ios-blue-gradient text-white text-xs font-bold shadow-md hover:opacity-95 flex items-center justify-center gap-2 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+        </svg>
+        Download Latest TuitionDesk Android App
+      </a>
     </div>
 
     <!-- Security & Privacy Guarantee Footer -->
@@ -194,7 +120,7 @@
         <span>100% Privacy & Zero Chat Exposure Guarantee</span>
       </div>
       <p class="text-[10.5px] text-slate-400">
-        Ye web bridge sirf background messages send karne ke liye authenticate karta hai. Aapke personal chats, media ya messages browser me na show hote hain, na save hote hain.
+        TuitionDesk aapke personal chats, photos ya contacts ko display nahi karta. Sirf fee reminders aur attendance notices background me dispatch hote hain.
       </p>
       <div class="pt-2 text-[10px] text-slate-400 border-t border-slate-200/60 mt-2">
         Platform Support: <a href="mailto:digital.axd@gmail.com" class="text-blue-600 font-bold">digital.axd@gmail.com</a> • WhatsApp: <a href="https://wa.me/918818050651" class="text-emerald-600 font-bold">+91 8818050651</a>
@@ -208,74 +134,9 @@
     const token = urlParams.get('token') || urlParams.get('t') || 'TCH_DEMO_2026';
     const teacherName = urlParams.get('name') || 'TuitionDesk Coaching';
     const phone = urlParams.get('phone') || '8818050651';
-    const serverUrl = urlParams.get('server') || 'http://127.0.0.1:3000';
 
     document.getElementById('dispToken').textContent = token;
     document.getElementById('dispName').textContent = teacherName + ' • +91 ' + phone;
-
-    // Generate Dynamic QR Code
-    let qrInstance = null;
-    function renderQr() {
-      const qrData = `TD_LINK:${token}:${phone}:${Date.now()}`;
-      const container = document.getElementById('qrcode');
-      container.innerHTML = '';
-      qrInstance = new QRCode(container, {
-        text: qrData,
-        width: 200,
-        height: 200,
-        colorDark: "#0F172A",
-        colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.M
-      });
-    }
-
-    renderQr();
-    setInterval(renderQr, 30000); // refresh every 30s
-
-    function switchTab(mode) {
-      if (mode === 'scan') {
-        document.getElementById('viewScan').classList.remove('hidden');
-        document.getElementById('viewPhone').classList.add('hidden');
-        document.getElementById('tabScan').className = "flex-1 py-2.5 rounded-xl font-bold text-xs transition-all ios-blue-gradient text-white shadow-xs";
-        document.getElementById('tabPhone').className = "flex-1 py-2.5 rounded-xl font-bold text-xs transition-all text-slate-600 hover:text-slate-900";
-      } else {
-        document.getElementById('viewScan').classList.add('hidden');
-        document.getElementById('viewPhone').classList.remove('hidden');
-        document.getElementById('tabPhone').className = "flex-1 py-2.5 rounded-xl font-bold text-xs transition-all ios-blue-gradient text-white shadow-xs";
-        document.getElementById('tabScan').className = "flex-1 py-2.5 rounded-xl font-bold text-xs transition-all text-slate-600 hover:text-slate-900";
-      }
-    }
-
-    function triggerSamePhoneLink() {
-      // Direct deep link to WhatsApp with pairing handshake
-      window.location.href = `whatsapp://send?phone=91${phone}&text=TuitionDesk%20Bot%20Pairing%20Handshake%20${encodeURIComponent(token)}`;
-    }
-
-    async function confirmConnection() {
-      // 1. Post to local server bot if active
-      try {
-        await fetch(`${serverUrl}/api/whatsapp/link-session`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: token, phone: phone, status: 'connected' })
-        });
-      } catch (_) {}
-
-      // 2. Save in localStorage for persistence
-      localStorage.setItem('td_wa_connected_' + token, 'true');
-
-      // 3. Trigger Celebration
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
-
-      document.getElementById('linkingContainer').classList.add('hidden');
-      document.getElementById('successCard').classList.remove('hidden');
-      document.getElementById('badgeStatus').className = 'px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5';
-      document.getElementById('badgeStatus').innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Connected Active';
-    }
   </script>
 </body>
 </html>
