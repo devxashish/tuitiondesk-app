@@ -51,4 +51,12 @@ TuitionDesk generates personalized external portal links for every student, elim
 
 ---
 
+## 📞 Admin & Platform Support
+
+For license activation keys, custom branding, or software queries:
+- **Admin Email:** [digital.axd@gmail.com](mailto:digital.axd@gmail.com)
+- **WhatsApp / Phone:** [+91 8818050651](https://wa.me/918818050651)
+
+---
+
 © 2026 TuitionDesk. All Rights Reserved.
