@@ -326,15 +326,21 @@
     const upiLink = `upi://pay?pa=${encodeURIComponent(teacherUpi)}&pn=${encodeURIComponent(instituteName)}&am=${feeAmount}&tn=Fee_${cleanName}&cu=INR`;
     document.getElementById('btnUpiApp').href = upiLink;
 
-    // Client-side QR Code rendering
-    new QRCode(document.getElementById("qrcode"), {
-      text: upiLink,
-      width: 180,
-      height: 180,
-      colorDark: "#0F172A",
-      colorLight: "#FFFFFF",
-      correctLevel: QRCode.CorrectLevel.M
-    });
+    // Custom QR Image or Client-side QR Code rendering
+    const customQrParam = urlParams.get('qr') || '';
+    const qrContainer = document.getElementById("qrcode");
+    if (customQrParam) {
+      qrContainer.innerHTML = `<img src="${customQrParam}" alt="Teacher UPI QR" class="max-w-[190px] max-h-[190px] mx-auto rounded-xl object-contain shadow-xs border border-slate-100">`;
+    } else {
+      new QRCode(qrContainer, {
+        text: upiLink,
+        width: 180,
+        height: 180,
+        colorDark: "#0F172A",
+        colorLight: "#FFFFFF",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
 
     function copyUpi() {
       navigator.clipboard.writeText(teacherUpi).then(() => {
