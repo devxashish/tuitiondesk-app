@@ -41,7 +41,7 @@
               DEVICE LOCK ENGINE
             </span>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">Admin Contacts: <a href="tel:8818050651" class="text-blue-400 font-semibold">+91 8818050651</a> • <a href="mailto:digital.axd@gmail.com" class="text-blue-400">digital.axd@gmail.com</a></p>
+          <p class="text-xs text-slate-400 mt-0.5">Encrypted Master License & Anti-Piracy Management</p>
         </div>
       </div>
 
@@ -52,6 +52,10 @@
         </div>
         <button onclick="changeServerUrl()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" title="Change Backend API URL">
           ⚙️ Change Server
+        </button>
+        
+        <button onclick="wipeDatabase()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/40 transition" title="Wipe Database & Clean Slate">
+          🗑️ Wipe Data
         </button>
         <button onclick="lockAdmin()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800 transition" title="Lock Master Admin Session">
           🔒 Lock Admin
@@ -243,8 +247,7 @@
   </div>
 
   <footer class="text-center text-xs text-slate-600 mt-8">
-    TuitionDesk Anti-Piracy & Device Licensing System • Admin Support: +91 8818050651
-  </footer>
+    TuitionDesk Anti-Piracy & Device Licensing System • Master Protected</footer>
 
     <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -398,14 +401,18 @@
             <td class="py-3 px-3">
               ${statusPill}
             </td>
-            <td class="py-3 px-3 text-right">
+            <td class="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
               ${isLocked ? `
-                <button onclick="resetDevice('${lic.license_key}')" class="text-[11px] bg-rose-900/40 hover:bg-rose-900/80 text-rose-300 px-2.5 py-1 rounded-lg border border-rose-800/50 transition">
-                  Reset Device
+                <button onclick="resetDevice('${lic.license_key}')" class="text-[11px] bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 px-2.5 py-1 rounded-lg border border-rose-800/50 transition" title="Unlink phone">
+                  📱 Reset Phone
                 </button>
-              ` : `
-                <span class="text-slate-600 text-xs">-</span>
-              `}
+              ` : ''}
+              <button onclick="toggleLicense('${lic.license_key}', ${lic.is_active ? 0 : 1})" class="text-[11px] ${lic.is_active ? 'bg-amber-950/60 hover:bg-amber-900/80 text-amber-300 border-amber-800/50' : 'bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border-emerald-800/50'} px-2.5 py-1 rounded-lg border transition">
+                ${lic.is_active ? '⏸️ Disable' : '▶️ Enable'}
+              </button>
+              <button onclick="deleteLicenseKey('${lic.license_key}')" class="text-[11px] bg-red-950/80 hover:bg-red-900 text-red-300 px-2.5 py-1 rounded-lg border border-red-800 transition" title="Delete key permanently">
+                🗑️ Delete
+              </button>
             </td>
           </tr>
         `;
@@ -517,15 +524,15 @@
       if (!tbody) return;
       try {
         const res = await adminFetch(`${baseApi}/api/admin/whatsapp-sessions`);
-        const data = await res.json();
-        if (data.success && data.sessions) {
-          allSessions = data.sessions;
-          renderWhatsAppSessions(allSessions);
-        } else {
-          tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-rose-400">Failed to load WhatsApp sessions.</td></tr>';
+        if (!res.ok) {
+          tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">No active teacher WhatsApp sessions. (When teachers connect, their live status appears here)</td></tr>';
+          return;
         }
+        const data = await res.json();
+        allSessions = data.sessions || [];
+        renderWhatsAppSessions(allSessions);
       } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">Offline / Server connecting...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">No active teacher WhatsApp sessions. (When teachers connect, their live status appears here)</td></tr>';
       }
     }
 
@@ -705,10 +712,10 @@
       </div>
       <div>
         <h2 class="text-xl font-black text-white">TuitionDesk Master Admin</h2>
-        <p class="text-xs text-slate-400 mt-1">Authorized access only. Enter Admin Master PIN or Secret to continue.</p>
+        <p class="text-xs text-slate-400 mt-1">Authorized access only. Enter Master Admin Key to continue.</p>
       </div>
       <form onsubmit="unlockAdmin(event)" class="space-y-4">
-        <input type="password" id="inputAdminPin" placeholder="Enter Admin Secret / PIN..." required class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-center text-white placeholder-slate-500 font-mono focus:outline-none focus:border-blue-500">
+        <input type="password" id="inputAdminPin" placeholder="Enter Master Admin Key..." required class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-center text-white placeholder-slate-500 font-mono focus:outline-none focus:border-blue-500">
         <div id="authErrorMsg" class="hidden text-xs text-rose-400 font-medium"></div>
         <button type="submit" id="btnUnlock" class="w-full py-3.5 rounded-2xl text-xs font-black bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/40 transition">
           Unlock Master Dashboard
