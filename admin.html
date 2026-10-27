@@ -255,14 +255,9 @@
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const serverParam = urlParams.get('server') || localStorage.getItem('td_admin_server');
-    const defaultCloudUrl = 'https://tuitiondesk-backend.onrender.com';
-    const baseApi = serverParam 
-      ? serverParam.replace(/\/+$/, '')
-      : ((window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
-          ? '' 
-          : defaultCloudUrl);
+    // Fixed immutable Render Cloud Backend URL (No localhost or custom override allowed)
+    const baseApi = 'https://tuitiondesk-backend.onrender.com';
+    try { localStorage.removeItem('td_admin_server'); } catch (_) {}
 
     // Update server badge label
     const badgeLabel = document.getElementById('serverLabel');

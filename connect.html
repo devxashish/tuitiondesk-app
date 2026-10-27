@@ -188,12 +188,8 @@
     const urlParams = new URLSearchParams(window.location.search);
     const ticket = urlParams.get('ticket') || '';
     const fallbackToken = urlParams.get('token') || '';
-    const serverParam = urlParams.get('server');
-    const baseApi = serverParam 
-      ? serverParam.replace(/\/+$/, '')
-      : ((window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
-          ? '' 
-          : 'https://tuitiondesk-backend.onrender.com');
+    // Fixed immutable Render Cloud Backend URL (No localhost or custom override allowed)
+    const baseApi = 'https://tuitiondesk-backend.onrender.com';
 
     let sessionToken = '';
     let sessionPhone = '';
