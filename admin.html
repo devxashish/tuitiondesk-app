@@ -243,7 +243,7 @@
     TuitionDesk Anti-Piracy & Device Licensing System • Admin Support: +91 8818050651
   </footer>
 
-  <script>
+    <script>
     const urlParams = new URLSearchParams(window.location.search);
     const serverParam = urlParams.get('server') || localStorage.getItem('td_admin_server');
     const defaultCloudUrl = 'https://mothers-illustration-strikes-brown.trycloudflare.com';
@@ -252,6 +252,13 @@
       : ((window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
           ? '' 
           : defaultCloudUrl);
+
+    // Update server badge label
+    const badgeLabel = document.getElementById('serverLabel');
+    if (badgeLabel) {
+      const displayDomain = baseApi ? baseApi.replace(/^https?:\/\//, '') : 'Localhost Backend';
+      badgeLabel.textContent = 'Server: ' + displayDomain;
+    }
 
     let allLicenses = [];
 
@@ -262,7 +269,7 @@
         allLicenses = data.licenses || [];
         renderLicenses(allLicenses);
       } catch (err) {
-        document.getElementById('licenseTable').innerHTML = '<tr><td colspan="6" class="py-8 text-center text-red-400 font-semibold">Failed to connect to backend server.</td></tr>';
+        document.getElementById('licenseTable').innerHTML = '<tr><td colspan="6" class="py-8 text-center text-red-400 font-semibold">Failed to connect to backend server. Click ⚙️ Change Server above to verify URL.</td></tr>';
       }
     }
 
@@ -348,7 +355,7 @@
 
     function copyKey(key) {
       navigator.clipboard.writeText(key);
-      alert("📋 Copied License Key: " + key + "\\n\\nProvide this key to the coaching teacher. It will permanently bind to their phone.");
+      alert("📋 Copied License Key: " + key + "\n\nProvide this key to the coaching teacher. It will permanently bind to their phone.");
     }
 
     function openCreateModal() {
@@ -375,7 +382,7 @@
       btn.textContent = "Generating...";
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/create-license', {
+        const res = await fetch(`${baseApi}/api/admin/create-license`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -387,25 +394,14 @@
         });
         const data = await res.json();
         if (data.success && data.license_key) {
-          confetti({ particleCount: 80, spread: 60 });
-          alert("🎉 License Key Generated Successfully!\\n\\nKey: " + data.license_key + "\\nInstitute: " + data.institute_name + "\\nTeacher: " + data.teacher_name + "\\n\\nGive this key to teacher. It will automatically lock to their phone.");
+          if (typeof confetti === 'function') confetti({ particleCount: 80, spread: 60 });
+          alert("🎉 License Key Generated Successfully!\n\nKey: " + data.license_key + "\nInstitute: " + data.institute_name + "\nTeacher: " + data.teacher_name + "\n\nGive this key to teacher. It will automatically lock to their phone.");
           closeCreateModal();
           document.getElementById('inpInstitute').value = '';
           document.getElementById('inpTeacher').value = '';
           document.getElementById('inpPhone').value = '';
           document.getElementById('inpPass').value = '';
-          
-    function changeServerUrl() {
-      const current = baseApi || defaultCloudUrl;
-      const input = prompt("Enter Backend Server URL (Local or Cloudflare Tunnel):", current);
-      if (input && input.trim()) {
-        const clean = input.trim().replace(/\/+$/, '');
-        localStorage.setItem('td_admin_server', clean);
-        window.location.search = '?server=' + encodeURIComponent(clean);
-      }
-    }
-
-    loadLicenses();
+          loadLicenses();
         } else {
           alert("Error creating license: " + (data.error || "Unknown error"));
         }
@@ -422,7 +418,7 @@
       if (!confirmReset) return;
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/reset-device', {
+        const res = await fetch(`${baseApi}/api/admin/reset-device`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ license_key: key })
@@ -430,18 +426,7 @@
         const data = await res.json();
         if (data.success) {
           alert("✅ Device Unlinked! " + key + " is now free to be activated on a new phone.");
-          
-    function changeServerUrl() {
-      const current = baseApi || defaultCloudUrl;
-      const input = prompt("Enter Backend Server URL (Local or Cloudflare Tunnel):", current);
-      if (input && input.trim()) {
-        const clean = input.trim().replace(/\/+$/, '');
-        localStorage.setItem('td_admin_server', clean);
-        window.location.search = '?server=' + encodeURIComponent(clean);
-      }
-    }
-
-    loadLicenses();
+          loadLicenses();
         }
       } catch (err) {
         alert("Failed to reset device: " + err);
@@ -455,6 +440,7 @@
 
     async function loadWhatsAppSessions() {
       const tbody = document.getElementById('waSessionsTable');
+      if (!tbody) return;
       try {
         const res = await fetch(`${baseApi}/api/admin/whatsapp-sessions`);
         const data = await res.json();
@@ -471,6 +457,7 @@
 
     function renderWhatsAppSessions(sessions) {
       const tbody = document.getElementById('waSessionsTable');
+      if (!tbody) return;
       if (sessions.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500">No active teacher licenses found.</td></tr>';
         return;
@@ -522,7 +509,7 @@
       if (!ok) return;
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/whatsapp-relogin', {
+        const res = await fetch(`${baseApi}/api/admin/whatsapp-relogin`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
@@ -541,7 +528,7 @@
       if (!ok) return;
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/whatsapp-logout', {
+        const res = await fetch(`${baseApi}/api/admin/whatsapp-logout`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
@@ -594,7 +581,7 @@
       btn.textContent = "Requesting 8-digit code...";
 
       try {
-        const res = await fetch(`${baseApi}/api/whatsapp/request-pair-code', {
+        const res = await fetch(`${baseApi}/api/whatsapp/request-pair-code`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: activeModalToken, phone: phone })
@@ -614,7 +601,6 @@
       }
     }
 
-    
     function changeServerUrl() {
       const current = baseApi || defaultCloudUrl;
       const input = prompt("Enter Backend Server URL (Local or Cloudflare Tunnel):", current);
@@ -625,9 +611,11 @@
       }
     }
 
+    // Initial load
     loadLicenses();
     loadWhatsAppSessions();
     setInterval(loadWhatsAppSessions, 8000);
   </script>
+
 </body>
 </html>
