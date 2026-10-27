@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TuitionDesk - Admin License & Device Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #0B0F19;
+      color: #F3F4F6;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.1em;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col justify-between">
+
+  <div class="max-w-6xl mx-auto w-full space-y-6">
+
+    <!-- Header -->
+    <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glass-card p-6 rounded-3xl shadow-2xl">
+      <div class="flex items-center gap-4">
+        <img src="logo.png" alt="TuitionDesk" class="w-14 h-14 rounded-2xl shadow-lg border border-white/10 object-cover">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-black text-white tracking-tight">TuitionDesk Master Admin</h1>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-600/30 text-blue-400 border border-blue-500/30">
+              DEVICE LOCK ENGINE
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">Admin Contacts: <a href="tel:8818050651" class="text-blue-400 font-semibold">+91 8818050651</a> • <a href="mailto:digital.axd@gmail.com" class="text-blue-400">digital.axd@gmail.com</a></p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/connect.html" target="_blank" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          WhatsApp Setup Portal 💬
+        </a>
+        <button onclick="openCreateModal()" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition flex items-center gap-2">
+          <span>+</span> Generate 1-Time License Key
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="glass-card p-5 rounded-2xl border border-white/5 space-y-1">
+        <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Generated Licenses</span>
+        <div id="statTotal" class="text-3xl font-extrabold text-white">0</div>
+        <p class="text-[11px] text-slate-500">Authorized coaching keys in system</p>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border border-white/5 space-y-1">
+        <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Locked to Phone</span>
+        <div id="statLocked" class="text-3xl font-extrabold text-emerald-400">0</div>
+        <p class="text-[11px] text-slate-500">Active single-device protected sessions</p>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border border-white/5 space-y-1">
+        <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Unbound / Waiting</span>
+        <div id="statUnbound" class="text-3xl font-extrabold text-amber-400">0</div>
+        <p class="text-[11px] text-slate-500">Keys waiting for 1st phone activation</p>
+      </div>
+    </div>
+
+    <!-- License Records Table -->
+    <div class="glass-card rounded-3xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-bold text-white">Active Coaching Licenses</h2>
+          <p class="text-xs text-slate-400">Each key can only be activated on 1 phone. Reset unlinks the phone.</p>
+        </div>
+        <div class="relative">
+          <input type="text" id="searchInput" oninput="filterLicenses()" placeholder="Search Institute, Teacher or Key..." class="w-full sm:w-72 bg-slate-800/80 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b border-slate-800/80">
+              <th class="py-3 px-3">License Key</th>
+              <th class="py-3 px-3">Institute & Teacher</th>
+              <th class="py-3 px-3">Contact</th>
+              <th class="py-3 px-3">Bound Phone / Device ID</th>
+              <th class="py-3 px-3">Status</th>
+              <th class="py-3 px-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="licenseTable" class="divide-y divide-slate-800/40">
+            <tr>
+              <td colspan="6" class="py-8 text-center text-slate-500">Loading licenses...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Create License Modal -->
+  <div id="createModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white">Generate 1-Time License Key</h3>
+          <p class="text-xs text-slate-400">Key will be permanently valid for 1 device.</p>
+        </div>
+        <button onclick="closeCreateModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Coaching / Institute Name</label>
+          <input type="text" id="inpInstitute" placeholder="e.g. Apex Coaching Institute" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teacher / Owner Name</label>
+          <input type="text" id="inpTeacher" placeholder="e.g. Ashish Sharma" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teacher Phone Number</label>
+          <input type="tel" id="inpPhone" placeholder="e.g. 8818050651" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Password (Optional)</label>
+          <input type="password" id="inpPass" placeholder="Leave empty for password-less" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button onclick="closeCreateModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
+          Cancel
+        </button>
+        <button onclick="submitCreateLicense()" id="btnSubmitCreate" class="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30">
+          Generate Key
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center text-xs text-slate-600 mt-8">
+    TuitionDesk Anti-Piracy & Device Licensing System • Admin Support: +91 8818050651
+  </footer>
+
+  <script>
+    let allLicenses = [];
+
+    async function loadLicenses() {
+      try {
+        const res = await fetch('/api/admin/licenses');
+        const data = await res.json();
+        allLicenses = data.licenses || [];
+        renderLicenses(allLicenses);
+      } catch (err) {
+        document.getElementById('licenseTable').innerHTML = '<tr><td colspan="6" class="py-8 text-center text-red-400 font-semibold">Failed to connect to backend server.</td></tr>';
+      }
+    }
+
+    function renderLicenses(list) {
+      const tbody = document.getElementById('licenseTable');
+      let total = list.length;
+      let locked = 0;
+      let unbound = 0;
+
+      list.forEach(lic => {
+        if (lic.device_id) locked++;
+        else unbound++;
+      });
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statLocked').textContent = locked;
+      document.getElementById('statUnbound').textContent = unbound;
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500">No licenses found. Click "+ Generate 1-Time License Key" to create one.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(lic => {
+        const isLocked = !!lic.device_id;
+        const devicePill = isLocked 
+          ? `<span class="bg-blue-950/80 text-blue-300 border border-blue-800/80 px-2 py-0.5 rounded-md font-mono text-[11px]">📱 ${lic.device_id}</span>`
+          : `<span class="text-amber-400 font-semibold text-[11px] bg-amber-950/30 px-2 py-0.5 rounded border border-amber-900/40">⏳ Unbound (Waiting for 1st phone)</span>`;
+
+        const statusPill = lic.is_active
+          ? `<span class="text-emerald-400 font-bold text-[11px] flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ACTIVE</span>`
+          : `<span class="text-rose-400 font-bold text-[11px]">● DISABLED</span>`;
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="py-3 px-3">
+              <button onclick="copyKey('${lic.license_key}')" title="Click to copy" class="font-mono-code font-bold text-teal-400 hover:text-teal-300 text-xs flex items-center gap-1.5">
+                <span>${lic.license_key}</span>
+                <span class="text-[10px] text-slate-500">📋</span>
+              </button>
+            </td>
+            <td class="py-3 px-3">
+              <div class="font-bold text-slate-200">${lic.institute_name}</div>
+              <div class="text-[11px] text-slate-400">${lic.teacher_name}</div>
+            </td>
+            <td class="py-3 px-3 text-slate-300 font-mono text-xs">
+              ${lic.teacher_phone ? `+91 ${lic.teacher_phone}` : '-'}
+            </td>
+            <td class="py-3 px-3">
+              ${devicePill}
+            </td>
+            <td class="py-3 px-3">
+              ${statusPill}
+            </td>
+            <td class="py-3 px-3 text-right">
+              ${isLocked ? `
+                <button onclick="resetDevice('${lic.license_key}')" class="text-[11px] bg-rose-900/40 hover:bg-rose-900/80 text-rose-300 px-2.5 py-1 rounded-lg border border-rose-800/50 transition">
+                  Reset Device
+                </button>
+              ` : `
+                <span class="text-slate-600 text-xs">-</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterLicenses() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      if (!q) {
+        renderLicenses(allLicenses);
+        return;
+      }
+      const filtered = allLicenses.filter(lic => 
+        (lic.license_key && lic.license_key.toLowerCase().includes(q)) ||
+        (lic.institute_name && lic.institute_name.toLowerCase().includes(q)) ||
+        (lic.teacher_name && lic.teacher_name.toLowerCase().includes(q)) ||
+        (lic.teacher_phone && lic.teacher_phone.toLowerCase().includes(q))
+      );
+      renderLicenses(filtered);
+    }
+
+    function copyKey(key) {
+      navigator.clipboard.writeText(key);
+      alert("📋 Copied License Key: " + key + "\\n\\nProvide this key to the coaching teacher. It will permanently bind to their phone.");
+    }
+
+    function openCreateModal() {
+      document.getElementById('createModal').classList.remove('hidden');
+    }
+
+    function closeCreateModal() {
+      document.getElementById('createModal').classList.add('hidden');
+    }
+
+    async function submitCreateLicense() {
+      const inst = document.getElementById('inpInstitute').value.trim();
+      const teacher = document.getElementById('inpTeacher').value.trim();
+      const phone = document.getElementById('inpPhone').value.trim();
+      const pass = document.getElementById('inpPass').value.trim();
+
+      if (!inst || !teacher) {
+        alert("Please enter Institute Name and Teacher Name.");
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitCreate');
+      btn.disabled = true;
+      btn.textContent = "Generating...";
+
+      try {
+        const res = await fetch('/api/admin/create-license', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            institute_name: inst,
+            teacher_name: teacher,
+            teacher_phone: phone,
+            password: pass
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.license_key) {
+          confetti({ particleCount: 80, spread: 60 });
+          alert("🎉 License Key Generated Successfully!\\n\\nKey: " + data.license_key + "\\nInstitute: " + data.institute_name + "\\nTeacher: " + data.teacher_name + "\\n\\nGive this key to teacher. It will automatically lock to their phone.");
+          closeCreateModal();
+          document.getElementById('inpInstitute').value = '';
+          document.getElementById('inpTeacher').value = '';
+          document.getElementById('inpPhone').value = '';
+          document.getElementById('inpPass').value = '';
+          loadLicenses();
+        } else {
+          alert("Error creating license: " + (data.error || "Unknown error"));
+        }
+      } catch (err) {
+        alert("Server request failed. Please check backend connection.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Generate Key";
+      }
+    }
+
+    async function resetDevice(key) {
+      const confirmReset = confirm("Are you sure you want to unlink phone from License: " + key + "?\\n\\nThis will allow the teacher to login on a new phone with this same key and restore their data.");
+      if (!confirmReset) return;
+
+      try {
+        const res = await fetch('/api/admin/reset-device', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ license_key: key })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ Device Unlinked! " + key + " is now free to be activated on a new phone.");
+          loadLicenses();
+        }
+      } catch (err) {
+        alert("Failed to reset device: " + err);
+      }
+    }
+
+    loadLicenses();
+  </script>
+</body>
+</html>
