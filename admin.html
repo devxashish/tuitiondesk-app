@@ -2,27 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TuitionDesk - Admin License & Device Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TuitionDesk - Master Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --ios-bg: #07090E;
+      --glass-surface: rgba(18, 23, 34, 0.68);
+      --glass-border: rgba(255, 255, 255, 0.10);
+      --glass-specular: rgba(255, 255, 255, 0.22);
+      --ios-blue: #0A84FF;
+      --ios-blue-glow: rgba(10, 132, 255, 0.32);
+    }
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: #0B0F19;
-      color: #F3F4F6;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", sans-serif;
+      background: radial-gradient(circle at 10% 10%, rgba(10, 132, 255, 0.08) 0%, transparent 45%),
+                  radial-gradient(circle at 90% 90%, rgba(48, 209, 88, 0.05) 0%, transparent 45%),
+                  #07090E;
+      color: #F5F7FA;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .liquid-glass {
+      background: var(--glass-surface);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-top: 1px solid var(--glass-specular);
+      box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .liquid-glass-card {
+      background: rgba(15, 19, 29, 0.55);
+      backdrop-filter: blur(20px) saturate(170%);
+      -webkit-backdrop-filter: blur(20px) saturate(170%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .ios-btn-primary {
+      background: linear-gradient(180deg, #1E88E5 0%, #0D47A1 100%);
+      box-shadow: 0 4px 18px rgba(13, 71, 161, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ios-btn-primary:active {
+      transform: scale(0.98);
+      filter: brightness(0.92);
     }
     .font-mono-code {
       font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.1em;
-    }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      letter-spacing: 0.12em;
     }
   </style>
 </head>
@@ -31,39 +65,40 @@
   <div class="max-w-6xl mx-auto w-full space-y-6">
 
     <!-- Header -->
-    <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glass-card p-6 rounded-3xl shadow-2xl">
+    <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 liquid-glass p-6 rounded-3xl">
       <div class="flex items-center gap-4">
-        <img src="logo.png" alt="TuitionDesk" class="w-14 h-14 rounded-2xl shadow-lg border border-white/10 object-cover">
+        <div class="relative">
+          <img src="logo.png" alt="TuitionDesk" class="w-14 h-14 rounded-2xl shadow-xl border border-white/20 object-cover bg-slate-900/40 p-1">
+        </div>
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-2xl font-black text-white tracking-tight">TuitionDesk Master Admin</h1>
-            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-600/30 text-blue-400 border border-blue-500/30">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-400 border border-blue-400/30">
               DEVICE LOCK ENGINE
             </span>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">Encrypted Master License & Anti-Piracy Management</p>
+          <p class="text-xs text-slate-400 mt-0.5">Encrypted Master License & Device Hardware Management</p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <div id="serverBadge" class="px-3 py-1.5 rounded-xl text-[11px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800 flex items-center gap-1.5 shadow-sm">
+        <div id="serverBadge" class="px-3 py-1.5 rounded-xl text-[11px] font-bold bg-emerald-950/60 text-emerald-300 border border-emerald-800/80 flex items-center gap-1.5 shadow-sm">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="serverLabel">Cloud Server: Live</span>
         </div>
-        <button onclick="changeServerUrl()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" title="Change Backend API URL">
+        <button onclick="changeServerUrl()" class="px-3 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition" title="Change Backend API URL">
           ⚙️ Change Server
         </button>
-        
-        <button onclick="wipeDatabase()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/40 transition" title="Wipe Database & Clean Slate">
+        <button onclick="wipeDatabase()" class="px-3 py-1.5 rounded-xl text-[11px] font-semibold bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 transition" title="Wipe Database & Clean Slate">
           🗑️ Wipe Data
         </button>
-        <button onclick="lockAdmin()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800 transition" title="Lock Master Admin Session">
+        <button onclick="lockAdmin()" class="px-3 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800/80 hover:bg-rose-950/60 text-slate-300 hover:text-rose-300 border border-white/10 hover:border-rose-800/50 transition" title="Lock Master Admin Session">
           🔒 Lock Admin
         </button>
-        <a href="connect.html" target="_blank" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+        <a href="connect.html" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-white/10 transition">
           WhatsApp Setup 💬
         </a>
-        <button onclick="openCreateModal()" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition flex items-center gap-2">
+        <button onclick="openCreateModal()" class="px-5 py-2.5 rounded-xl text-xs font-extrabold ios-btn-primary text-white flex items-center gap-2">
           <span>+</span> Generate 1-Time License Key
         </button>
       </div>
@@ -71,17 +106,17 @@
 
     <!-- Stats Row -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="glass-card p-5 rounded-2xl border border-white/5 space-y-1">
+      <div class="liquid-glass-card p-5 rounded-2xl space-y-1">
         <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Generated Licenses</span>
         <div id="statTotal" class="text-3xl font-extrabold text-white">0</div>
         <p class="text-[11px] text-slate-500">Authorized coaching keys in system</p>
       </div>
-      <div class="glass-card p-5 rounded-2xl border border-white/5 space-y-1">
+      <div class="liquid-glass-card p-5 rounded-2xl space-y-1">
         <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Locked to Phone</span>
         <div id="statLocked" class="text-3xl font-extrabold text-emerald-400">0</div>
         <p class="text-[11px] text-slate-500">Active single-device protected sessions</p>
       </div>
-      <div class="glass-card p-5 rounded-2xl border border-white/5 space-y-1">
+      <div class="liquid-glass-card p-5 rounded-2xl space-y-1">
         <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Unbound / Waiting</span>
         <div id="statUnbound" class="text-3xl font-extrabold text-amber-400">0</div>
         <p class="text-[11px] text-slate-500">Keys waiting for 1st phone activation</p>
@@ -89,21 +124,21 @@
     </div>
 
     <!-- License Records Table -->
-    <div class="glass-card rounded-3xl p-6 shadow-xl space-y-4">
+    <div class="liquid-glass rounded-3xl p-6 space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-lg font-bold text-white">Active Coaching Licenses</h2>
           <p class="text-xs text-slate-400">Each key can only be activated on 1 phone. Reset unlinks the phone.</p>
         </div>
         <div class="relative">
-          <input type="text" id="searchInput" oninput="filterLicenses()" placeholder="Search Institute, Teacher or Key..." class="w-full sm:w-72 bg-slate-800/80 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
+          <input type="text" id="searchInput" oninput="filterLicenses()" placeholder="Search Institute, Teacher or Key..." class="w-full sm:w-72 bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
           <thead>
-            <tr class="text-slate-400 border-b border-slate-800/80">
+            <tr class="text-slate-400 border-b border-white/10">
               <th class="py-3 px-3">License Key</th>
               <th class="py-3 px-3">Institute & Teacher</th>
               <th class="py-3 px-3">Contact</th>
@@ -112,7 +147,7 @@
               <th class="py-3 px-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody id="licenseTable" class="divide-y divide-slate-800/40">
+          <tbody id="licenseTable" class="divide-y divide-white/5">
             <tr>
               <td colspan="6" class="py-8 text-center text-slate-500">Loading licenses...</td>
             </tr>
@@ -121,17 +156,16 @@
       </div>
     </div>
 
-    <!-- WhatsApp Multi-Tenant Sessions Card -->
-    <div class="glass-card rounded-3xl p-6 shadow-xl space-y-4">
+    <!-- Active WhatsApp Sessions Section -->
+    <div class="liquid-glass rounded-3xl p-6 space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="space-y-0.5">
-          <div class="flex items-center gap-2">
-            <span class="text-emerald-400 font-extrabold text-lg">💬</span>
-            <h2 class="text-lg font-bold text-white">Teacher WhatsApp Automation Sessions</h2>
-          </div>
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span>💬</span> Teacher WhatsApp Automation Sessions
+          </h2>
           <p class="text-xs text-slate-400">Manage real-time headless background WhatsApp sessions, re-login fresh QR codes, or force logout.</p>
         </div>
-        <button onclick="loadWhatsAppSessions()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1.5 self-start sm:self-auto">
+        <button onclick="loadWhatsAppSessions()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition flex items-center gap-1.5 self-start sm:self-auto">
           <span>🔄</span> Refresh Sessions
         </button>
       </div>
@@ -139,7 +173,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
           <thead>
-            <tr class="text-slate-400 border-b border-slate-800/80">
+            <tr class="text-slate-400 border-b border-white/10">
               <th class="py-3 px-3">Teacher / Institute</th>
               <th class="py-3 px-3">Dedicated Token</th>
               <th class="py-3 px-3">WhatsApp Number</th>
@@ -147,7 +181,7 @@
               <th class="py-3 px-3 text-right">Session Controls</th>
             </tr>
           </thead>
-          <tbody id="waSessionsTable" class="divide-y divide-slate-800/40">
+          <tbody id="waSessionsTable" class="divide-y divide-white/5">
             <tr>
               <td colspan="5" class="py-8 text-center text-slate-500">Loading WhatsApp sessions...</td>
             </tr>
@@ -158,98 +192,69 @@
 
   </div>
 
-  <!-- Create License Modal -->
-  <div id="createModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="text-base font-bold text-white">Generate 1-Time License Key</h3>
-          <p class="text-xs text-slate-400">Key will be permanently valid for 1 device.</p>
-        </div>
-        <button onclick="closeCreateModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+  <footer class="text-center text-xs text-slate-600 mt-8">
+    TuitionDesk Anti-Piracy & Device Licensing System • Master Protected
+  </footer>
+
+  <!-- Generate License Key Modal -->
+  <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="liquid-glass max-w-md w-full p-6 rounded-3xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-base font-bold text-white">Generate 1-Time License Key</h3>
+        <button onclick="closeCreateModal()" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
       </div>
 
-      <div class="space-y-3">
+      <form onsubmit="createLicense(event)" class="space-y-3 text-xs">
         <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1">Coaching / Institute Name</label>
-          <input type="text" id="inpInstitute" placeholder="e.g. Apex Coaching Institute" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-slate-300 font-semibold mb-1">Coaching / Institute Name *</label>
+          <input type="text" id="inputInstitute" required placeholder="e.g. Apex Physics Academy" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teacher / Owner Name</label>
-          <input type="text" id="inpTeacher" placeholder="e.g. Ashish Sharma" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-slate-300 font-semibold mb-1">Teacher Full Name *</label>
+          <input type="text" id="inputTeacher" required placeholder="e.g. Rahul Sharma Sir" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teacher Phone Number</label>
-          <input type="tel" id="inpPhone" placeholder="e.g. 8818050651" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-slate-300 font-semibold mb-1">Teacher Phone Number (Optional)</label>
+          <input type="tel" id="inputPhone" placeholder="10-digit mobile" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1">Password (Optional)</label>
-          <input type="password" id="inpPass" placeholder="Leave empty for password-less" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-slate-300 font-semibold mb-1">Coaching Password (Optional)</label>
+          <input type="text" id="inputPassword" placeholder="Optional security password" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
-      </div>
 
-      <div class="flex items-center justify-end gap-2 pt-2">
-        <button onclick="closeCreateModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">
-          Cancel
-        </button>
-        <button onclick="submitCreateLicense()" id="btnSubmitCreate" class="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30">
-          Generate Key
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- WhatsApp QR & Pairing Modal -->
-  <div id="qrModal" class="fixed inset-0 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div>
-          <h3 class="text-base font-bold text-white flex items-center gap-2">
-            <span class="text-emerald-400">💬</span> WhatsApp Session Pairing
-          </h3>
-          <p id="modalTokenTitle" class="text-xs font-mono text-blue-400">Loading token...</p>
-        </div>
-        <button onclick="closeWhatsAppModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
-      </div>
-
-      <!-- QR Code Display Box -->
-      <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 text-center space-y-3">
-        <div class="relative inline-block mx-auto bg-white p-2 rounded-2xl shadow-lg">
-          <img id="modalQrImg" src="" alt="WhatsApp QR Code" class="w-56 h-56 object-contain rounded-xl">
-        </div>
-        <p id="modalQrStatus" class="text-xs text-slate-400 font-medium">Fetching live QR code...</p>
-        <button onclick="refreshModalQr()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
-          🔄 Refresh QR Code
-        </button>
-      </div>
-
-      <!-- Pairing Code Alternative -->
-      <div class="bg-slate-950/60 rounded-2xl p-3 border border-slate-800/80 space-y-2">
-        <span class="text-[11px] font-bold text-slate-300">Or Request 8-Digit Pairing Code:</span>
-        <div class="flex gap-2">
-          <input type="tel" id="modalPairPhone" placeholder="Mobile Number" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500">
-          <button onclick="requestModalPairCode()" id="btnModalGetCode" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition">
-            Get Code
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" onclick="closeCreateModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold transition">
+            Cancel
+          </button>
+          <button type="submit" id="btnSubmitKey" class="px-5 py-2 rounded-xl ios-btn-primary text-white font-extrabold transition">
+            Create Key
           </button>
         </div>
-        <div id="modalPairCodeBox" class="hidden text-center py-2 bg-blue-950/60 rounded-xl border border-blue-800/60">
-          <span class="text-[10px] text-blue-300 uppercase font-bold tracking-wider">Your Pairing Code</span>
-          <div id="modalPairCodeText" class="font-mono text-xl font-extrabold text-white tracking-widest mt-0.5">---- ----</div>
-        </div>
-      </div>
-
-      <div class="text-center pt-1">
-        <button onclick="closeWhatsAppModal()" class="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
-          Close
-        </button>
-      </div>
+      </form>
     </div>
   </div>
 
-  <footer class="text-center text-xs text-slate-600 mt-8">
-    TuitionDesk Anti-Piracy & Device Licensing System • Master Protected</footer>
+  <!-- Master Admin Authentication Modal -->
+  <div id="adminAuthModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div class="liquid-glass max-w-sm w-full p-8 rounded-3xl space-y-5 text-center">
+      <div class="w-16 h-16 mx-auto rounded-3xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-3xl shadow-xl shadow-blue-500/20">
+        🔐
+      </div>
+      <div>
+        <h2 class="text-xl font-black text-white">TuitionDesk Master Admin</h2>
+        <p class="text-xs text-slate-400 mt-1">Authorized access only. Enter Master Admin Key to continue.</p>
+      </div>
+      <form onsubmit="unlockAdmin(event)" class="space-y-4">
+        <input type="password" id="inputAdminPin" placeholder="Enter Master Admin Key..." required class="w-full bg-slate-900/90 border border-white/10 rounded-2xl px-4 py-3 text-sm text-center text-white placeholder-slate-500 font-mono focus:outline-none focus:border-blue-500">
+        <div id="authErrorMsg" class="hidden text-xs text-rose-400 font-medium"></div>
+        <button type="submit" id="btnUnlock" class="w-full py-3.5 rounded-2xl text-xs font-black ios-btn-primary text-white transition">
+          Unlock Master Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
 
-    <script>
+  <script>
     const urlParams = new URLSearchParams(window.location.search);
     const serverParam = urlParams.get('server') || localStorage.getItem('td_admin_server');
     const defaultCloudUrl = 'https://tuitiondesk-backend.onrender.com';
@@ -262,11 +267,10 @@
     // Update server badge label
     const badgeLabel = document.getElementById('serverLabel');
     if (badgeLabel) {
-      const displayDomain = baseApi ? baseApi.replace(/^https?:\/\//, '') : 'Localhost Backend';
+      const displayDomain = baseApi ? baseApi.replace(/^https?:\/\//, '') : 'Live Cloud Server';
       badgeLabel.textContent = 'Server: ' + displayDomain;
     }
 
-    
     function getAdminSecret() {
       return sessionStorage.getItem('td_admin_secret') || '';
     }
@@ -276,6 +280,10 @@
       options.headers = options.headers || {};
       if (secret) {
         options.headers['X-Admin-Secret'] = secret;
+        options.headers['Authorization'] = 'Bearer ' + secret;
+        // Append query param fallback for zero-CORS preflight failures
+        const sep = url.includes('?') ? '&' : '?';
+        url = `${url}${sep}admin_secret=${encodeURIComponent(secret)}`;
       }
       if (!options.headers['Content-Type'] && options.body) {
         options.headers['Content-Type'] = 'application/json';
@@ -283,7 +291,7 @@
       const res = await fetch(url, options);
       if (res.status === 401) {
         sessionStorage.removeItem('td_admin_secret');
-        showAuthModal('🔒 Session expired ya Galat Admin Secret. Dobara PIN enter karein.');
+        showAuthModal('Session expired. Enter Master Admin Key again.');
         throw new Error('Unauthorized');
       }
       return res;
@@ -305,7 +313,7 @@
 
     function lockAdmin() {
       sessionStorage.removeItem('td_admin_secret');
-      showAuthModal('Master Admin locked. PIN enter karke unlock karein.');
+      showAuthModal('Master Admin locked. Enter Master Key to unlock.');
     }
 
     async function unlockAdmin(e) {
@@ -317,19 +325,20 @@
       btn.textContent = 'Verifying Secret...';
 
       try {
-        const res = await adminFetch(`${baseApi}/api/admin/licenses`, {
-          headers: { 'X-Admin-Secret': pin }
-        });
+        // Use query param for zero-preflight failure on unlock
+        const res = await fetch(`${baseApi}/api/admin/licenses?admin_secret=${encodeURIComponent(pin)}`);
         if (res.status === 200) {
           sessionStorage.setItem('td_admin_secret', pin);
           document.getElementById('adminAuthModal').classList.add('hidden');
           loadLicenses();
           loadWhatsAppSessions();
+        } else if (res.status === 401) {
+          showAuthModal('❌ Galat Master Admin Key! Access Denied.');
         } else {
-          showAuthModal('❌ Galat Admin Secret / PIN! Access Denied.');
+          showAuthModal('Server status: ' + res.status);
         }
       } catch (err) {
-        showAuthModal('Server connection error: ' + err);
+        showAuthModal('Connection error: ' + err);
       } finally {
         btn.disabled = false;
         btn.textContent = 'Unlock Master Dashboard';
@@ -338,7 +347,6 @@
 
     let allLicenses = [];
 
-
     async function loadLicenses() {
       try {
         const res = await adminFetch(`${baseApi}/api/admin/licenses`);
@@ -346,7 +354,7 @@
         allLicenses = data.licenses || [];
         renderLicenses(allLicenses);
       } catch (err) {
-        document.getElementById('licenseTable').innerHTML = '<tr><td colspan="6" class="py-8 text-center text-red-400 font-semibold">Failed to connect to backend server. Click ⚙️ Change Server above to verify URL.</td></tr>';
+        document.getElementById('licenseTable').innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500">Connecting to server...</td></tr>';
       }
     }
 
@@ -373,7 +381,7 @@
       tbody.innerHTML = list.map(lic => {
         const isLocked = !!lic.device_id;
         const devicePill = isLocked 
-          ? `<span class="bg-blue-950/80 text-blue-300 border border-blue-800/80 px-2 py-0.5 rounded-md font-mono text-[11px]">📱 ${lic.device_id}</span>`
+          ? `<span class="bg-blue-950/60 text-blue-300 border border-blue-800/60 px-2 py-0.5 rounded-md font-mono text-[11px]">📱 ${lic.device_id}</span>`
           : `<span class="text-amber-400 font-semibold text-[11px] bg-amber-950/30 px-2 py-0.5 rounded border border-amber-900/40">⏳ Unbound (Waiting for 1st phone)</span>`;
 
         const statusPill = lic.is_active
@@ -381,7 +389,7 @@
           : `<span class="text-rose-400 font-bold text-[11px]">● DISABLED</span>`;
 
         return `
-          <tr class="hover:bg-slate-800/40 transition">
+          <tr class="hover:bg-slate-800/30 transition">
             <td class="py-3 px-3">
               <button onclick="copyKey('${lic.license_key}')" title="Click to copy" class="font-mono-code font-bold text-teal-400 hover:text-teal-300 text-xs flex items-center gap-1.5">
                 <span>${lic.license_key}</span>
@@ -425,18 +433,20 @@
         renderLicenses(allLicenses);
         return;
       }
-      const filtered = allLicenses.filter(lic => 
-        (lic.license_key && lic.license_key.toLowerCase().includes(q)) ||
-        (lic.institute_name && lic.institute_name.toLowerCase().includes(q)) ||
-        (lic.teacher_name && lic.teacher_name.toLowerCase().includes(q)) ||
-        (lic.teacher_phone && lic.teacher_phone.toLowerCase().includes(q))
+      const filtered = allLicenses.filter(l => 
+        (l.license_key && l.license_key.toLowerCase().includes(q)) ||
+        (l.institute_name && l.institute_name.toLowerCase().includes(q)) ||
+        (l.teacher_name && l.teacher_name.toLowerCase().includes(q)) ||
+        (l.teacher_phone && l.teacher_phone.includes(q)) ||
+        (l.device_id && l.device_id.toLowerCase().includes(q))
       );
       renderLicenses(filtered);
     }
 
     function copyKey(key) {
       navigator.clipboard.writeText(key);
-      alert("📋 Copied License Key: " + key + "\n\nProvide this key to the coaching teacher. It will permanently bind to their phone.");
+      confetti({ particleCount: 30, spread: 45, origin: { y: 0.8 } });
+      alert(`Copied License Key: ${key}`);
     }
 
     function openCreateModal() {
@@ -447,76 +457,112 @@
       document.getElementById('createModal').classList.add('hidden');
     }
 
-    async function submitCreateLicense() {
-      const inst = document.getElementById('inpInstitute').value.trim();
-      const teacher = document.getElementById('inpTeacher').value.trim();
-      const phone = document.getElementById('inpPhone').value.trim();
-      const pass = document.getElementById('inpPass').value.trim();
+    async function createLicense(e) {
+      e.preventDefault();
+      const inst = document.getElementById('inputInstitute').value.trim();
+      const teacher = document.getElementById('inputTeacher').value.trim();
+      const phone = document.getElementById('inputPhone').value.trim();
+      const pwd = document.getElementById('inputPassword').value.trim();
 
-      if (!inst || !teacher) {
-        alert("Please enter Institute Name and Teacher Name.");
-        return;
-      }
-
-      const btn = document.getElementById('btnSubmitCreate');
+      const btn = document.getElementById('btnSubmitKey');
       btn.disabled = true;
-      btn.textContent = "Generating...";
+      btn.textContent = 'Generating...';
 
       try {
         const res = await adminFetch(`${baseApi}/api/admin/create-license`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
             institute_name: inst,
             teacher_name: teacher,
             teacher_phone: phone,
-            password: pass
+            password: pwd
           })
         });
         const data = await res.json();
         if (data.success && data.license_key) {
-          if (typeof confetti === 'function') confetti({ particleCount: 80, spread: 60 });
-          alert("🎉 License Key Generated Successfully!\n\nKey: " + data.license_key + "\nInstitute: " + data.institute_name + "\nTeacher: " + data.teacher_name + "\n\nGive this key to teacher. It will automatically lock to their phone.");
           closeCreateModal();
-          document.getElementById('inpInstitute').value = '';
-          document.getElementById('inpTeacher').value = '';
-          document.getElementById('inpPhone').value = '';
-          document.getElementById('inpPass').value = '';
+          confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+          alert(`🎉 1-Time License Key Generated:\n\nKey: ${data.license_key}\nInstitute: ${inst}\n\nShare this key with the teacher.`);
           loadLicenses();
+          loadWhatsAppSessions();
         } else {
-          alert("Error creating license: " + (data.error || "Unknown error"));
+          alert('Failed to create key: ' + (data.error || 'Server error'));
         }
       } catch (err) {
-        alert("Server request failed. Please check backend connection.");
+        alert('Server error: ' + err);
       } finally {
         btn.disabled = false;
-        btn.textContent = "Generate Key";
+        btn.textContent = 'Create Key';
       }
     }
 
     async function resetDevice(key) {
-      const confirmReset = confirm("Are you sure you want to unlink phone from License: " + key + "?\n\nThis will allow the teacher to login on a new phone with this same key and restore their data.");
-      if (!confirmReset) return;
+      const ok = confirm(`Reset bound device for ${key}?\n\nThis will allow the teacher to activate this license on a new phone.`);
+      if (!ok) return;
 
       try {
         const res = await adminFetch(`${baseApi}/api/admin/reset-device`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ license_key: key })
         });
         const data = await res.json();
-        if (data.success) {
-          alert("✅ Device Unlinked! " + key + " is now free to be activated on a new phone.");
-          loadLicenses();
-        }
-      } catch (err) {
-        alert("Failed to reset device: " + err);
+        alert(data.message || 'Device unlinked successfully.');
+        loadLicenses();
+        loadWhatsAppSessions();
+      } catch (e) {
+        alert('Failed to reset device: ' + e);
       }
     }
 
-    // ==========================================
-    // WHATSAPP MULTI-TENANT SESSIONS CONTROLLER
-    // ==========================================
+    async function deleteLicenseKey(key) {
+      if (!confirm(`Are you sure you want to permanently delete license key ${key}? This will revoke access for that device immediately.`)) return;
+      try {
+        const res = await adminFetch(`${baseApi}/api/admin/delete-key`, {
+          method: 'POST',
+          body: JSON.stringify({ key: key })
+        });
+        const data = await res.json();
+        alert(data.message || 'License deleted.');
+        loadLicenses();
+        loadWhatsAppSessions();
+      } catch (e) {
+        alert('Failed to delete license: ' + e);
+      }
+    }
+
+    async function toggleLicense(key, newStatus) {
+      try {
+        const res = await adminFetch(`${baseApi}/api/admin/toggle-license`, {
+          method: 'POST',
+          body: JSON.stringify({ key: key, active: newStatus })
+        });
+        loadLicenses();
+      } catch (e) {
+        alert('Failed to update license status: ' + e);
+      }
+    }
+
+    async function wipeDatabase() {
+      const pin = prompt("⚠️ WARNING: This will permanently wipe all test data, students, and licenses! Enter Master Admin Key to confirm:");
+      if (!pin) return;
+      try {
+        const res = await fetch(`${baseApi}/api/admin/wipe-database?admin_secret=${encodeURIComponent(pin.trim())}`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'X-Admin-Secret': pin.trim()}
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('✅ Database wiped cleanly! All records have been cleared.');
+          loadLicenses();
+          loadWhatsAppSessions();
+        } else {
+          alert('Access Denied: ' + (data.message || 'Incorrect Master Admin Key'));
+        }
+      } catch (e) {
+        alert('Error: ' + e);
+      }
+    }
+
     let allSessions = [];
 
     async function loadWhatsAppSessions() {
@@ -525,14 +571,14 @@
       try {
         const res = await adminFetch(`${baseApi}/api/admin/whatsapp-sessions`);
         if (!res.ok) {
-          tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">No active teacher WhatsApp sessions. (When teachers connect, their live status appears here)</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500">No active teacher WhatsApp sessions. (When teachers connect, their live status appears here)</td></tr>';
           return;
         }
         const data = await res.json();
         allSessions = data.sessions || [];
         renderWhatsAppSessions(allSessions);
       } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">No active teacher WhatsApp sessions. (When teachers connect, their live status appears here)</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500">No active teacher WhatsApp sessions. (When teachers connect, their live status appears here)</td></tr>';
       }
     }
 
@@ -540,7 +586,7 @@
       const tbody = document.getElementById('waSessionsTable');
       if (!tbody) return;
       if (sessions.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500">No active teacher licenses found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500">No active teacher WhatsApp sessions. (When teachers connect, their live status appears here)</td></tr>';
         return;
       }
 
@@ -551,28 +597,25 @@
         } else if (s.status === 'needs_qr' || s.has_qr) {
           statusBadge = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1.5 w-fit"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> QR / Pair Code Ready</span>`;
         } else {
-          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-400 border border-slate-700 w-fit">Disconnected</span>`;
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700 flex items-center gap-1.5 w-fit"><span class="w-2 h-2 rounded-full bg-slate-500"></span> Disconnected</span>`;
         }
 
         return `
-          <tr class="hover:bg-slate-800/40 transition">
+          <tr class="hover:bg-slate-800/30 transition">
             <td class="py-3 px-3">
-              <div class="font-bold text-slate-200">${s.teacher_name || 'Teacher'}</div>
-              <div class="text-[11px] text-slate-400">${s.institute_name} (${s.license_key})</div>
+              <div class="font-bold text-slate-200">${s.institute_name || 'Coaching Institute'}</div>
+              <div class="text-[11px] text-slate-400">${s.teacher_name || 'Teacher'} (${s.license_key || 'No Key'})</div>
             </td>
-            <td class="py-3 px-3">
-              <span class="font-mono text-xs text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-900/60 select-all">${s.token}</span>
+            <td class="py-3 px-3 font-mono text-xs text-blue-400">
+              ${s.token}
             </td>
             <td class="py-3 px-3 text-slate-300 font-mono text-xs">
-              +91 ${s.teacher_phone || '-'}
+              ${s.phone ? `+91 ${s.phone}` : (s.teacher_phone ? `+91 ${s.teacher_phone}` : '-')}
             </td>
             <td class="py-3 px-3">
               ${statusBadge}
             </td>
-            <td class="py-3 px-3 text-right space-x-1.5">
-              <button onclick="openWhatsAppModal('${s.token}', '${s.teacher_phone || ''}')" class="text-[11px] bg-blue-900/40 hover:bg-blue-800/60 text-blue-300 px-2.5 py-1 rounded-lg border border-blue-700/50 transition">
-                📲 View QR / Pair
-              </button>
+            <td class="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
               <button onclick="reloginWhatsApp('${s.token}')" class="text-[11px] bg-teal-900/40 hover:bg-teal-800/60 text-teal-300 px-2.5 py-1 rounded-lg border border-teal-700/50 transition" title="Clear session cache and request fresh QR">
                 🔄 Re-login
               </button>
@@ -592,7 +635,6 @@
       try {
         const res = await adminFetch(`${baseApi}/api/admin/whatsapp-relogin`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
         });
         const data = await res.json();
@@ -611,7 +653,6 @@
       try {
         const res = await adminFetch(`${baseApi}/api/admin/whatsapp-logout`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
         });
         const data = await res.json();
@@ -622,69 +663,9 @@
       }
     }
 
-    let activeModalToken = '';
-    let qrPollTimer = null;
-
-    function openWhatsAppModal(token, phone) {
-      activeModalToken = token;
-      document.getElementById('modalTokenTitle').textContent = token;
-      document.getElementById('modalPairPhone').value = phone || '8818050651';
-      document.getElementById('modalPairCodeBox').classList.add('hidden');
-      document.getElementById('qrModal').classList.remove('hidden');
-      refreshModalQr();
-      if (qrPollTimer) clearInterval(qrPollTimer);
-      qrPollTimer = setInterval(refreshModalQr, 5000);
-    }
-
-    function closeWhatsAppModal() {
-      if (qrPollTimer) clearInterval(qrPollTimer);
-      document.getElementById('qrModal').classList.add('hidden');
-    }
-
-    function refreshModalQr() {
-      if (!activeModalToken) return;
-      const img = document.getElementById('modalQrImg');
-      const text = document.getElementById('modalQrStatus');
-      text.textContent = "Fetching live QR code...";
-      img.src = `${baseApi}/api/whatsapp/qr.png?token=${encodeURIComponent(activeModalToken)}&t=${Date.now()}`;
-      img.onload = () => { text.textContent = "Scan with teacher's WhatsApp: Linked Devices > Link a Device"; };
-      img.onerror = () => { text.textContent = "Generating QR in background... Please wait 3 seconds."; };
-    }
-
-    async function requestModalPairCode() {
-      const phone = document.getElementById('modalPairPhone').value.trim().replace(/[^0-9]/g, '');
-      if (phone.length < 10) {
-        alert("Enter valid 10-digit mobile number.");
-        return;
-      }
-      const btn = document.getElementById('btnModalGetCode');
-      btn.disabled = true;
-      btn.textContent = "Requesting 8-digit code...";
-
-      try {
-        const res = await fetch(`${baseApi}/api/whatsapp/request-pair-code`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ token: activeModalToken, phone: phone })
-        });
-        const data = await res.json();
-        if (data.success && data.code) {
-          document.getElementById('modalPairCodeText').textContent = data.code;
-          document.getElementById('modalPairCodeBox').classList.remove('hidden');
-        } else {
-          alert("Pairing Code error: " + (data.error || "Please try again or scan QR."));
-        }
-      } catch (e) {
-        alert("Server error: " + e);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Get 8-Digit Pairing Code";
-      }
-    }
-
     function changeServerUrl() {
       const current = baseApi || defaultCloudUrl;
-      const input = prompt("Enter Backend Server URL (Local or Cloudflare Tunnel):", current);
+      const input = prompt("Enter Backend Server URL:", current);
       if (input && input.trim()) {
         const clean = input.trim().replace(/\/+$/, '');
         localStorage.setItem('td_admin_server', clean);
@@ -700,29 +681,7 @@
       loadLicenses();
       loadWhatsAppSessions();
     }
-    setInterval(loadWhatsAppSessions, 8000);
   </script>
-
-
-  <!-- Master Admin Authentication Modal -->
-  <div id="adminAuthModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
-    <div class="glass-card max-w-sm w-full p-8 rounded-3xl border border-white/10 space-y-5 text-center shadow-2xl">
-      <div class="w-16 h-16 mx-auto rounded-3xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/20">
-        🔐
-      </div>
-      <div>
-        <h2 class="text-xl font-black text-white">TuitionDesk Master Admin</h2>
-        <p class="text-xs text-slate-400 mt-1">Authorized access only. Enter Master Admin Key to continue.</p>
-      </div>
-      <form onsubmit="unlockAdmin(event)" class="space-y-4">
-        <input type="password" id="inputAdminPin" placeholder="Enter Master Admin Key..." required class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-center text-white placeholder-slate-500 font-mono focus:outline-none focus:border-blue-500">
-        <div id="authErrorMsg" class="hidden text-xs text-rose-400 font-medium"></div>
-        <button type="submit" id="btnUnlock" class="w-full py-3.5 rounded-2xl text-xs font-black bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/40 transition">
-          Unlock Master Dashboard
-        </button>
-      </form>
-    </div>
-  </div>
 
 </body>
 </html>
