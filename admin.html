@@ -53,6 +53,9 @@
         <button onclick="changeServerUrl()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" title="Change Backend API URL">
           ⚙️ Change Server
         </button>
+        <button onclick="lockAdmin()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800 transition" title="Lock Master Admin Session">
+          🔒 Lock Admin
+        </button>
         <a href="connect.html" target="_blank" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
           WhatsApp Setup 💬
         </a>
@@ -260,11 +263,82 @@
       badgeLabel.textContent = 'Server: ' + displayDomain;
     }
 
+    
+    function getAdminSecret() {
+      return sessionStorage.getItem('td_admin_secret') || '';
+    }
+
+    async function adminFetch(url, options = {}) {
+      const secret = getAdminSecret();
+      options.headers = options.headers || {};
+      if (secret) {
+        options.headers['X-Admin-Secret'] = secret;
+      }
+      if (!options.headers['Content-Type'] && options.body) {
+        options.headers['Content-Type'] = 'application/json';
+      }
+      const res = await fetch(url, options);
+      if (res.status === 401) {
+        sessionStorage.removeItem('td_admin_secret');
+        showAuthModal('🔒 Session expired ya Galat Admin Secret. Dobara PIN enter karein.');
+        throw new Error('Unauthorized');
+      }
+      return res;
+    }
+
+    function showAuthModal(errMsg = '') {
+      const modal = document.getElementById('adminAuthModal');
+      const errBox = document.getElementById('authErrorMsg');
+      if (modal) modal.classList.remove('hidden');
+      if (errBox) {
+        if (errMsg) {
+          errBox.textContent = errMsg;
+          errBox.classList.remove('hidden');
+        } else {
+          errBox.classList.add('hidden');
+        }
+      }
+    }
+
+    function lockAdmin() {
+      sessionStorage.removeItem('td_admin_secret');
+      showAuthModal('Master Admin locked. PIN enter karke unlock karein.');
+    }
+
+    async function unlockAdmin(e) {
+      if (e) e.preventDefault();
+      const pin = document.getElementById('inputAdminPin').value.trim();
+      if (!pin) return;
+      const btn = document.getElementById('btnUnlock');
+      btn.disabled = true;
+      btn.textContent = 'Verifying Secret...';
+
+      try {
+        const res = await adminFetch(`${baseApi}/api/admin/licenses`, {
+          headers: { 'X-Admin-Secret': pin }
+        });
+        if (res.status === 200) {
+          sessionStorage.setItem('td_admin_secret', pin);
+          document.getElementById('adminAuthModal').classList.add('hidden');
+          loadLicenses();
+          loadWhatsAppSessions();
+        } else {
+          showAuthModal('❌ Galat Admin Secret / PIN! Access Denied.');
+        }
+      } catch (err) {
+        showAuthModal('Server connection error: ' + err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Unlock Master Dashboard';
+      }
+    }
+
     let allLicenses = [];
+
 
     async function loadLicenses() {
       try {
-        const res = await fetch(`${baseApi}/api/admin/licenses`);
+        const res = await adminFetch(`${baseApi}/api/admin/licenses`);
         const data = await res.json();
         allLicenses = data.licenses || [];
         renderLicenses(allLicenses);
@@ -382,7 +456,7 @@
       btn.textContent = "Generating...";
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/create-license`, {
+        const res = await adminFetch(`${baseApi}/api/admin/create-license`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -418,7 +492,7 @@
       if (!confirmReset) return;
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/reset-device`, {
+        const res = await adminFetch(`${baseApi}/api/admin/reset-device`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ license_key: key })
@@ -442,7 +516,7 @@
       const tbody = document.getElementById('waSessionsTable');
       if (!tbody) return;
       try {
-        const res = await fetch(`${baseApi}/api/admin/whatsapp-sessions`);
+        const res = await adminFetch(`${baseApi}/api/admin/whatsapp-sessions`);
         const data = await res.json();
         if (data.success && data.sessions) {
           allSessions = data.sessions;
@@ -509,7 +583,7 @@
       if (!ok) return;
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/whatsapp-relogin`, {
+        const res = await adminFetch(`${baseApi}/api/admin/whatsapp-relogin`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
@@ -528,7 +602,7 @@
       if (!ok) return;
 
       try {
-        const res = await fetch(`${baseApi}/api/admin/whatsapp-logout`, {
+        const res = await adminFetch(`${baseApi}/api/admin/whatsapp-logout`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
@@ -611,11 +685,37 @@
       }
     }
 
-    // Initial load
-    loadLicenses();
-    loadWhatsAppSessions();
+    // Initial load with security check
+    if (!getAdminSecret()) {
+      showAuthModal();
+    } else {
+      document.getElementById('adminAuthModal').classList.add('hidden');
+      loadLicenses();
+      loadWhatsAppSessions();
+    }
     setInterval(loadWhatsAppSessions, 8000);
   </script>
+
+
+  <!-- Master Admin Authentication Modal -->
+  <div id="adminAuthModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="glass-card max-w-sm w-full p-8 rounded-3xl border border-white/10 space-y-5 text-center shadow-2xl">
+      <div class="w-16 h-16 mx-auto rounded-3xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/20">
+        🔐
+      </div>
+      <div>
+        <h2 class="text-xl font-black text-white">TuitionDesk Master Admin</h2>
+        <p class="text-xs text-slate-400 mt-1">Authorized access only. Enter Admin Master PIN or Secret to continue.</p>
+      </div>
+      <form onsubmit="unlockAdmin(event)" class="space-y-4">
+        <input type="password" id="inputAdminPin" placeholder="Enter Admin Secret / PIN..." required class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-center text-white placeholder-slate-500 font-mono focus:outline-none focus:border-blue-500">
+        <div id="authErrorMsg" class="hidden text-xs text-rose-400 font-medium"></div>
+        <button type="submit" id="btnUnlock" class="w-full py-3.5 rounded-2xl text-xs font-black bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/40 transition">
+          Unlock Master Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
 
 </body>
 </html>
