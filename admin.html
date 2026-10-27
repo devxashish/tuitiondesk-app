@@ -86,18 +86,15 @@
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="serverLabel">Cloud Server: Live</span>
         </div>
-        <button onclick="changeServerUrl()" class="px-3 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition" title="Change Backend API URL">
-          ⚙️ Change Server
-        </button>
         <button onclick="wipeDatabase()" class="px-3 py-1.5 rounded-xl text-[11px] font-semibold bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 transition" title="Wipe Database & Clean Slate">
           🗑️ Wipe Data
         </button>
         <button onclick="lockAdmin()" class="px-3 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800/80 hover:bg-rose-950/60 text-slate-300 hover:text-rose-300 border border-white/10 hover:border-rose-800/50 transition" title="Lock Master Admin Session">
           🔒 Lock Admin
         </button>
-        <a href="connect.html" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-white/10 transition">
-          WhatsApp Setup 💬
-        </a>
+        <button onclick="openGenerateTicketModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/10">
+          <span>🔗</span> Connect WhatsApp
+        </button>
         <button onclick="openCreateModal()" class="px-5 py-2.5 rounded-xl text-xs font-extrabold ios-btn-primary text-white flex items-center gap-2">
           <span>+</span> Generate 1-Time License Key
         </button>
@@ -165,9 +162,14 @@
           </h2>
           <p class="text-xs text-slate-400">Manage real-time headless background WhatsApp sessions, re-login fresh QR codes, or force logout.</p>
         </div>
-        <button onclick="loadWhatsAppSessions()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition flex items-center gap-1.5 self-start sm:self-auto">
-          <span>🔄</span> Refresh Sessions
-        </button>
+        <div class="flex items-center gap-2 self-start sm:self-auto">
+          <button onclick="openGenerateTicketModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 transition flex items-center gap-1.5">
+            <span>🔗</span> Generate Connect Ticket
+          </button>
+          <button onclick="loadWhatsAppSessions()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition flex items-center gap-1.5">
+            <span>🔄</span> Refresh Sessions
+          </button>
+        </div>
       </div>
 
       <div class="overflow-x-auto">
@@ -410,6 +412,9 @@
                   📱 Reset Phone
                 </button>
               ` : ''}
+              <button onclick="openTicketModalForLicense('${lic.teacher_token || ('TCH_' + (lic.teacher_phone || '8818050651'))}', '${lic.teacher_phone || ''}', '${(lic.teacher_name || '').replace(/'/g, "\\'")}', '${(lic.institute_name || '').replace(/'/g, "\\'")}')" class="text-[11px] bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-700/50 transition font-bold" title="Generate 5-min secure connect ticket">
+                🔗 Connect WA
+              </button>
               <button onclick="toggleLicense('${lic.license_key}', ${lic.is_active ? 0 : 1})" class="text-[11px] ${lic.is_active ? 'bg-amber-950/60 hover:bg-amber-900/80 text-amber-300 border-amber-800/50' : 'bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border-emerald-800/50'} px-2.5 py-1 rounded-lg border transition">
                 ${lic.is_active ? '⏸️ Disable' : '▶️ Enable'}
               </button>
@@ -611,6 +616,9 @@
               ${statusBadge}
             </td>
             <td class="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
+              <button onclick="openTicketModalForLicense('${s.token}', '${s.phone || s.teacher_phone || ''}', '${(s.teacher_name || '').replace(/'/g, "\\'")}', '${(s.institute_name || '').replace(/'/g, "\\'")}')" class="text-[11px] bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-700/50 transition font-bold" title="Generate 5-min secure connect ticket">
+                🔗 Connect
+              </button>
               <button onclick="reloginWhatsApp('${s.token}')" class="text-[11px] bg-teal-900/40 hover:bg-teal-800/60 text-teal-300 px-2.5 py-1 rounded-lg border border-teal-700/50 transition" title="Clear session cache and request fresh QR">
                 🔄 Re-login
               </button>
@@ -658,14 +666,122 @@
       }
     }
 
-    function changeServerUrl() {
-      const current = baseApi || defaultCloudUrl;
-      const input = prompt("Enter Backend Server URL:", current);
-      if (input && input.trim()) {
-        const clean = input.trim().replace(/\/+$/, '');
-        localStorage.setItem('td_admin_server', clean);
-        window.location.search = '?server=' + encodeURIComponent(clean);
+    let currentGeneratedTicketUrl = '';
+    let ticketCountdownTimer = null;
+    let ticketSecondsLeft = 300;
+
+    function openGenerateTicketModal() {
+      document.getElementById('ticketTeacherBanner').classList.add('hidden');
+      document.getElementById('ticketTokenInput').value = '';
+      document.getElementById('ticketPhoneInput').value = '';
+      document.getElementById('ticketResultBox').classList.add('hidden');
+      document.getElementById('ticketModal').classList.remove('hidden');
+      if (ticketCountdownTimer) clearInterval(ticketCountdownTimer);
+    }
+
+    function openTicketModalForLicense(token, phone, teacherName, instituteName) {
+      document.getElementById('ticketTeacherBanner').classList.remove('hidden');
+      document.getElementById('ticketTeacherTitle').textContent = instituteName || 'Coaching Institute';
+      document.getElementById('ticketTeacherSub').textContent = (teacherName ? teacherName + ' • ' : '') + token;
+      document.getElementById('ticketTokenInput').value = token;
+      document.getElementById('ticketPhoneInput').value = phone || '';
+      document.getElementById('ticketResultBox').classList.add('hidden');
+      document.getElementById('ticketModal').classList.remove('hidden');
+      if (ticketCountdownTimer) clearInterval(ticketCountdownTimer);
+
+      if (token && phone) {
+        generateTicket(token, phone);
       }
+    }
+
+    function closeTicketModal() {
+      document.getElementById('ticketModal').classList.add('hidden');
+      if (ticketCountdownTimer) clearInterval(ticketCountdownTimer);
+    }
+
+    async function handleGenerateTicketSubmit(e) {
+      e.preventDefault();
+      const token = document.getElementById('ticketTokenInput').value.trim();
+      const phone = document.getElementById('ticketPhoneInput').value.trim().replace(/[^0-9]/g, '');
+      if (!token) {
+        alert("Please enter a valid teacher token.");
+        return;
+      }
+      if (!phone || phone.length < 10) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+      }
+      await generateTicket(token, phone);
+    }
+
+    async function generateTicket(token, phone) {
+      const btn = document.getElementById('btnGenTicket');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span> Generating Ticket...`;
+
+      try {
+        const res = await adminFetch(`${baseApi}/api/whatsapp/create-connect-ticket`, {
+          method: 'POST',
+          body: JSON.stringify({
+            token: token,
+            phone: phone
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.ticket) {
+          currentGeneratedTicketUrl = `https://devxashish.github.io/tuitiondesk-app/connect.html?ticket=${encodeURIComponent(data.ticket)}`;
+          document.getElementById('ticketUrlText').textContent = currentGeneratedTicketUrl;
+          document.getElementById('ticketResultBox').classList.remove('hidden');
+          
+          ticketSecondsLeft = data.expires_in || 300;
+          updateTicketCountdown();
+          if (ticketCountdownTimer) clearInterval(ticketCountdownTimer);
+          ticketCountdownTimer = setInterval(() => {
+            ticketSecondsLeft--;
+            if (ticketSecondsLeft <= 0) {
+              clearInterval(ticketCountdownTimer);
+              document.getElementById('ticketCountdown').textContent = "EXPIRED";
+              document.getElementById('ticketCountdown').className = "font-mono text-xs font-extrabold text-rose-500";
+            } else {
+              updateTicketCountdown();
+            }
+          }, 1000);
+
+          confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 } });
+        } else {
+          alert("Ticket generation error: " + (data.error || "Please try again."));
+        }
+      } catch (err) {
+        alert("Server request failed: " + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `✨ Generate 5-Minute Secure Ticket`;
+      }
+    }
+
+    function updateTicketCountdown() {
+      const mins = Math.floor(ticketSecondsLeft / 60);
+      const secs = ticketSecondsLeft % 60;
+      const fmt = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      const el = document.getElementById('ticketCountdown');
+      if (el) {
+        el.textContent = fmt;
+        el.className = ticketSecondsLeft < 60 
+          ? "font-mono text-xs font-extrabold text-rose-400 animate-pulse" 
+          : "font-mono text-xs font-extrabold text-amber-400 animate-pulse";
+      }
+    }
+
+    function openGeneratedTicketUrl() {
+      if (!currentGeneratedTicketUrl) return;
+      window.open(currentGeneratedTicketUrl, '_blank');
+    }
+
+    function copyGeneratedTicketUrl() {
+      if (!currentGeneratedTicketUrl) return;
+      navigator.clipboard.writeText(currentGeneratedTicketUrl);
+      confetti({ particleCount: 30, spread: 45, origin: { y: 0.8 } });
+      alert("✅ 5-Minute Secure Connect Link copied to clipboard! Share it with the teacher.");
     }
 
     // Initial load with security check
@@ -677,6 +793,67 @@
       loadWhatsAppSessions();
     }
   </script>
+
+
+  <!-- Generate WhatsApp Connect Ticket Modal -->
+  <div id="ticketModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="liquid-glass rounded-3xl max-w-md w-full p-6 space-y-5 border border-white/10 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-lg">
+            🔗
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-white">Generate WhatsApp Connect Link</h3>
+            <p class="text-[11px] text-slate-400">Secure 5-Minute Single-Use Session Ticket</p>
+          </div>
+        </div>
+        <button onclick="closeTicketModal()" class="text-slate-400 hover:text-white text-lg px-2">✕</button>
+      </div>
+
+      <div id="ticketTeacherBanner" class="hidden bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-0.5 text-xs">
+        <div class="font-bold text-white" id="ticketTeacherTitle">Institute Name</div>
+        <div class="text-[11px] text-slate-400" id="ticketTeacherSub">Teacher Name</div>
+      </div>
+
+      <form id="ticketForm" onsubmit="handleGenerateTicketSubmit(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Teacher Dedicated Token</label>
+          <input type="text" id="ticketTokenInput" required placeholder="e.g. TCH_8818050651" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Teacher WhatsApp Mobile (10-Digit)</label>
+          <input type="tel" id="ticketPhoneInput" required placeholder="e.g. 8818050651" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+        </div>
+        <button type="submit" id="btnGenTicket" class="w-full py-3 rounded-xl text-xs font-black bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30">
+          ✨ Generate 5-Minute Secure Ticket
+        </button>
+      </form>
+
+      <!-- Result Box -->
+      <div id="ticketResultBox" class="hidden space-y-3 pt-2 border-t border-white/10">
+        <div class="bg-slate-950/80 p-3.5 rounded-xl border border-emerald-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Active 5-Min Ticket</span>
+            <span id="ticketCountdown" class="font-mono text-xs font-extrabold text-amber-400 animate-pulse">05:00</span>
+          </div>
+          <div id="ticketUrlText" class="font-mono text-[11px] text-slate-300 break-all select-all bg-black/40 p-2.5 rounded-lg border border-white/5">
+            ...
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="openGeneratedTicketUrl()" class="w-full py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/20">
+            <span>🌐</span> Open Portal Now
+          </button>
+          <button onclick="copyGeneratedTicketUrl()" class="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border border-white/10 transition flex items-center justify-center gap-1.5">
+            <span>📋</span> Copy Link
+          </button>
+        </div>
+        <p class="text-[10px] text-center text-slate-400">Send this link to the teacher. Link will expire automatically in 5 minutes.</p>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
