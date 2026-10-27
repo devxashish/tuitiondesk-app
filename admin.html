@@ -45,9 +45,16 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <a href="/connect.html" target="_blank" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
-          WhatsApp Setup Portal 💬
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div id="serverBadge" class="px-3 py-1.5 rounded-xl text-[11px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800 flex items-center gap-1.5 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="serverLabel">Cloud Server: Live</span>
+        </div>
+        <button onclick="changeServerUrl()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" title="Change Backend API URL">
+          ⚙️ Change Server
+        </button>
+        <a href="connect.html" target="_blank" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          WhatsApp Setup 💬
         </a>
         <button onclick="openCreateModal()" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition flex items-center gap-2">
           <span>+</span> Generate 1-Time License Key
@@ -237,11 +244,20 @@
   </footer>
 
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const serverParam = urlParams.get('server') || localStorage.getItem('td_admin_server');
+    const defaultCloudUrl = 'https://mothers-illustration-strikes-brown.trycloudflare.com';
+    const baseApi = serverParam 
+      ? serverParam.replace(/\/+$/, '')
+      : ((window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
+          ? '' 
+          : defaultCloudUrl);
+
     let allLicenses = [];
 
     async function loadLicenses() {
       try {
-        const res = await fetch('/api/admin/licenses');
+        const res = await fetch(`${baseApi}/api/admin/licenses`);
         const data = await res.json();
         allLicenses = data.licenses || [];
         renderLicenses(allLicenses);
@@ -359,7 +375,7 @@
       btn.textContent = "Generating...";
 
       try {
-        const res = await fetch('/api/admin/create-license', {
+        const res = await fetch(`${baseApi}/api/admin/create-license', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -378,7 +394,18 @@
           document.getElementById('inpTeacher').value = '';
           document.getElementById('inpPhone').value = '';
           document.getElementById('inpPass').value = '';
-          loadLicenses();
+          
+    function changeServerUrl() {
+      const current = baseApi || defaultCloudUrl;
+      const input = prompt("Enter Backend Server URL (Local or Cloudflare Tunnel):", current);
+      if (input && input.trim()) {
+        const clean = input.trim().replace(/\/+$/, '');
+        localStorage.setItem('td_admin_server', clean);
+        window.location.search = '?server=' + encodeURIComponent(clean);
+      }
+    }
+
+    loadLicenses();
         } else {
           alert("Error creating license: " + (data.error || "Unknown error"));
         }
@@ -395,7 +422,7 @@
       if (!confirmReset) return;
 
       try {
-        const res = await fetch('/api/admin/reset-device', {
+        const res = await fetch(`${baseApi}/api/admin/reset-device', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ license_key: key })
@@ -403,7 +430,18 @@
         const data = await res.json();
         if (data.success) {
           alert("✅ Device Unlinked! " + key + " is now free to be activated on a new phone.");
-          loadLicenses();
+          
+    function changeServerUrl() {
+      const current = baseApi || defaultCloudUrl;
+      const input = prompt("Enter Backend Server URL (Local or Cloudflare Tunnel):", current);
+      if (input && input.trim()) {
+        const clean = input.trim().replace(/\/+$/, '');
+        localStorage.setItem('td_admin_server', clean);
+        window.location.search = '?server=' + encodeURIComponent(clean);
+      }
+    }
+
+    loadLicenses();
         }
       } catch (err) {
         alert("Failed to reset device: " + err);
@@ -418,7 +456,7 @@
     async function loadWhatsAppSessions() {
       const tbody = document.getElementById('waSessionsTable');
       try {
-        const res = await fetch('/api/admin/whatsapp-sessions');
+        const res = await fetch(`${baseApi}/api/admin/whatsapp-sessions`);
         const data = await res.json();
         if (data.success && data.sessions) {
           allSessions = data.sessions;
@@ -484,7 +522,7 @@
       if (!ok) return;
 
       try {
-        const res = await fetch('/api/admin/whatsapp-relogin', {
+        const res = await fetch(`${baseApi}/api/admin/whatsapp-relogin', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
@@ -503,7 +541,7 @@
       if (!ok) return;
 
       try {
-        const res = await fetch('/api/admin/whatsapp-logout', {
+        const res = await fetch(`${baseApi}/api/admin/whatsapp-logout', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: token })
@@ -540,7 +578,7 @@
       const img = document.getElementById('modalQrImg');
       const text = document.getElementById('modalQrStatus');
       text.textContent = "Fetching live QR code...";
-      img.src = `/api/whatsapp/qr.png?token=${encodeURIComponent(activeModalToken)}&t=${Date.now()}`;
+      img.src = `${baseApi}/api/whatsapp/qr.png?token=${encodeURIComponent(activeModalToken)}&t=${Date.now()}`;
       img.onload = () => { text.textContent = "Scan with teacher's WhatsApp: Linked Devices > Link a Device"; };
       img.onerror = () => { text.textContent = "Generating QR in background... Please wait 3 seconds."; };
     }
@@ -556,7 +594,7 @@
       btn.textContent = "Requesting 8-digit code...";
 
       try {
-        const res = await fetch('/api/whatsapp/request-pair-code', {
+        const res = await fetch(`${baseApi}/api/whatsapp/request-pair-code', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ token: activeModalToken, phone: phone })
@@ -573,6 +611,17 @@
       } finally {
         btn.disabled = false;
         btn.textContent = "Get 8-Digit Pairing Code";
+      }
+    }
+
+    
+    function changeServerUrl() {
+      const current = baseApi || defaultCloudUrl;
+      const input = prompt("Enter Backend Server URL (Local or Cloudflare Tunnel):", current);
+      if (input && input.trim()) {
+        const clean = input.trim().replace(/\/+$/, '');
+        localStorage.setItem('td_admin_server', clean);
+        window.location.search = '?server=' + encodeURIComponent(clean);
       }
     }
 
