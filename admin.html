@@ -246,7 +246,7 @@
     <script>
     const urlParams = new URLSearchParams(window.location.search);
     const serverParam = urlParams.get('server') || localStorage.getItem('td_admin_server');
-    const defaultCloudUrl = 'https://mothers-illustration-strikes-brown.trycloudflare.com';
+    const defaultCloudUrl = 'https://tuitiondesk-backend.onrender.com';
     const baseApi = serverParam 
       ? serverParam.replace(/\/+$/, '')
       : ((window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
