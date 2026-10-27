@@ -180,9 +180,12 @@
     document.getElementById('dispPhone').textContent = '+91 ' + initPhone;
     document.getElementById('inputPhone').value = initPhone;
 
-    const baseApi = (window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
-      ? '' 
-      : 'http://127.0.0.1:3000';
+    const serverParam = urlParams.get('server');
+    const baseApi = serverParam 
+      ? serverParam.replace(/\/$/, '')
+      : ((window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
+          ? '' 
+          : 'https://mothers-illustration-strikes-brown.trycloudflare.com');
 
     function switchMethod(method) {
       const tabPhone = document.getElementById('tabPhone');

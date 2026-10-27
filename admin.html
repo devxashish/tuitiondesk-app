@@ -107,6 +107,41 @@
       </div>
     </div>
 
+    <!-- WhatsApp Multi-Tenant Sessions Card -->
+    <div class="glass-card rounded-3xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="space-y-0.5">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-400 font-extrabold text-lg">💬</span>
+            <h2 class="text-lg font-bold text-white">Teacher WhatsApp Automation Sessions</h2>
+          </div>
+          <p class="text-xs text-slate-400">Manage real-time headless background WhatsApp sessions, re-login fresh QR codes, or force logout.</p>
+        </div>
+        <button onclick="loadWhatsAppSessions()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1.5 self-start sm:self-auto">
+          <span>🔄</span> Refresh Sessions
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-slate-400 border-b border-slate-800/80">
+              <th class="py-3 px-3">Teacher / Institute</th>
+              <th class="py-3 px-3">Dedicated Token</th>
+              <th class="py-3 px-3">WhatsApp Number</th>
+              <th class="py-3 px-3">Live Status</th>
+              <th class="py-3 px-3 text-right">Session Controls</th>
+            </tr>
+          </thead>
+          <tbody id="waSessionsTable" class="divide-y divide-slate-800/40">
+            <tr>
+              <td colspan="5" class="py-8 text-center text-slate-500">Loading WhatsApp sessions...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <!-- Create License Modal -->
@@ -145,6 +180,53 @@
         </button>
         <button onclick="submitCreateLicense()" id="btnSubmitCreate" class="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30">
           Generate Key
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp QR & Pairing Modal -->
+  <div id="qrModal" class="fixed inset-0 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="text-emerald-400">💬</span> WhatsApp Session Pairing
+          </h3>
+          <p id="modalTokenTitle" class="text-xs font-mono text-blue-400">Loading token...</p>
+        </div>
+        <button onclick="closeWhatsAppModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      </div>
+
+      <!-- QR Code Display Box -->
+      <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 text-center space-y-3">
+        <div class="relative inline-block mx-auto bg-white p-2 rounded-2xl shadow-lg">
+          <img id="modalQrImg" src="" alt="WhatsApp QR Code" class="w-56 h-56 object-contain rounded-xl">
+        </div>
+        <p id="modalQrStatus" class="text-xs text-slate-400 font-medium">Fetching live QR code...</p>
+        <button onclick="refreshModalQr()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          🔄 Refresh QR Code
+        </button>
+      </div>
+
+      <!-- Pairing Code Alternative -->
+      <div class="bg-slate-950/60 rounded-2xl p-3 border border-slate-800/80 space-y-2">
+        <span class="text-[11px] font-bold text-slate-300">Or Request 8-Digit Pairing Code:</span>
+        <div class="flex gap-2">
+          <input type="tel" id="modalPairPhone" placeholder="Mobile Number" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500">
+          <button onclick="requestModalPairCode()" id="btnModalGetCode" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition">
+            Get Code
+          </button>
+        </div>
+        <div id="modalPairCodeBox" class="hidden text-center py-2 bg-blue-950/60 rounded-xl border border-blue-800/60">
+          <span class="text-[10px] text-blue-300 uppercase font-bold tracking-wider">Your Pairing Code</span>
+          <div id="modalPairCodeText" class="font-mono text-xl font-extrabold text-white tracking-widest mt-0.5">---- ----</div>
+        </div>
+      </div>
+
+      <div class="text-center pt-1">
+        <button onclick="closeWhatsAppModal()" class="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+          Close
         </button>
       </div>
     </div>
@@ -309,7 +391,7 @@
     }
 
     async function resetDevice(key) {
-      const confirmReset = confirm("Are you sure you want to unlink phone from License: " + key + "?\\n\\nThis will allow the teacher to login on a new phone with this same key and restore their data.");
+      const confirmReset = confirm("Are you sure you want to unlink phone from License: " + key + "?\n\nThis will allow the teacher to login on a new phone with this same key and restore their data.");
       if (!confirmReset) return;
 
       try {
@@ -328,7 +410,175 @@
       }
     }
 
+    // ==========================================
+    // WHATSAPP MULTI-TENANT SESSIONS CONTROLLER
+    // ==========================================
+    let allSessions = [];
+
+    async function loadWhatsAppSessions() {
+      const tbody = document.getElementById('waSessionsTable');
+      try {
+        const res = await fetch('/api/admin/whatsapp-sessions');
+        const data = await res.json();
+        if (data.success && data.sessions) {
+          allSessions = data.sessions;
+          renderWhatsAppSessions(allSessions);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-rose-400">Failed to load WhatsApp sessions.</td></tr>';
+        }
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-500">Offline / Server connecting...</td></tr>';
+      }
+    }
+
+    function renderWhatsAppSessions(sessions) {
+      const tbody = document.getElementById('waSessionsTable');
+      if (sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500">No active teacher licenses found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = sessions.map(s => {
+        let statusBadge = '';
+        if (s.connected) {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800 flex items-center gap-1.5 w-fit"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Connected</span>`;
+        } else if (s.status === 'needs_qr' || s.has_qr) {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1.5 w-fit"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> QR / Pair Code Ready</span>`;
+        } else {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-400 border border-slate-700 w-fit">Disconnected</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="py-3 px-3">
+              <div class="font-bold text-slate-200">${s.teacher_name || 'Teacher'}</div>
+              <div class="text-[11px] text-slate-400">${s.institute_name} (${s.license_key})</div>
+            </td>
+            <td class="py-3 px-3">
+              <span class="font-mono text-xs text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-900/60 select-all">${s.token}</span>
+            </td>
+            <td class="py-3 px-3 text-slate-300 font-mono text-xs">
+              +91 ${s.teacher_phone || '-'}
+            </td>
+            <td class="py-3 px-3">
+              ${statusBadge}
+            </td>
+            <td class="py-3 px-3 text-right space-x-1.5">
+              <button onclick="openWhatsAppModal('${s.token}', '${s.teacher_phone || ''}')" class="text-[11px] bg-blue-900/40 hover:bg-blue-800/60 text-blue-300 px-2.5 py-1 rounded-lg border border-blue-700/50 transition">
+                📲 View QR / Pair
+              </button>
+              <button onclick="reloginWhatsApp('${s.token}')" class="text-[11px] bg-teal-900/40 hover:bg-teal-800/60 text-teal-300 px-2.5 py-1 rounded-lg border border-teal-700/50 transition" title="Clear session cache and request fresh QR">
+                🔄 Re-login
+              </button>
+              <button onclick="logoutWhatsApp('${s.token}')" class="text-[11px] bg-rose-900/40 hover:bg-rose-900/80 text-rose-300 px-2.5 py-1 rounded-lg border border-rose-800/50 transition" title="Force disconnect session">
+                ⏹️ Logout
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function reloginWhatsApp(token) {
+      const ok = confirm("Reset WhatsApp session for " + token + "?\n\nThis will clear any expired session cache and generate a fresh QR code / pairing code immediately.");
+      if (!ok) return;
+
+      try {
+        const res = await fetch('/api/admin/whatsapp-relogin', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ token: token })
+        });
+        const data = await res.json();
+        alert(data.message || "Fresh session initialized.");
+        loadWhatsAppSessions();
+        setTimeout(loadWhatsAppSessions, 2000);
+      } catch (e) {
+        alert("Failed to relogin WhatsApp: " + e);
+      }
+    }
+
+    async function logoutWhatsApp(token) {
+      const ok = confirm("Force logout WhatsApp session for " + token + "?");
+      if (!ok) return;
+
+      try {
+        const res = await fetch('/api/admin/whatsapp-logout', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ token: token })
+        });
+        const data = await res.json();
+        alert(data.message || "Session disconnected.");
+        loadWhatsAppSessions();
+      } catch (e) {
+        alert("Failed to logout WhatsApp: " + e);
+      }
+    }
+
+    let activeModalToken = '';
+    let qrPollTimer = null;
+
+    function openWhatsAppModal(token, phone) {
+      activeModalToken = token;
+      document.getElementById('modalTokenTitle').textContent = token;
+      document.getElementById('modalPairPhone').value = phone || '8818050651';
+      document.getElementById('modalPairCodeBox').classList.add('hidden');
+      document.getElementById('qrModal').classList.remove('hidden');
+      refreshModalQr();
+      if (qrPollTimer) clearInterval(qrPollTimer);
+      qrPollTimer = setInterval(refreshModalQr, 5000);
+    }
+
+    function closeWhatsAppModal() {
+      if (qrPollTimer) clearInterval(qrPollTimer);
+      document.getElementById('qrModal').classList.add('hidden');
+    }
+
+    function refreshModalQr() {
+      if (!activeModalToken) return;
+      const img = document.getElementById('modalQrImg');
+      const text = document.getElementById('modalQrStatus');
+      text.textContent = "Fetching live QR code...";
+      img.src = `/api/whatsapp/qr.png?token=${encodeURIComponent(activeModalToken)}&t=${Date.now()}`;
+      img.onload = () => { text.textContent = "Scan with teacher's WhatsApp: Linked Devices > Link a Device"; };
+      img.onerror = () => { text.textContent = "Generating QR in background... Please wait 3 seconds."; };
+    }
+
+    async function requestModalPairCode() {
+      const phone = document.getElementById('modalPairPhone').value.trim().replace(/[^0-9]/g, '');
+      if (phone.length < 10) {
+        alert("Enter valid 10-digit mobile number.");
+        return;
+      }
+      const btn = document.getElementById('btnModalGetCode');
+      btn.disabled = true;
+      btn.textContent = "Requesting 8-digit code...";
+
+      try {
+        const res = await fetch('/api/whatsapp/request-pair-code', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ token: activeModalToken, phone: phone })
+        });
+        const data = await res.json();
+        if (data.success && data.code) {
+          document.getElementById('modalPairCodeText').textContent = data.code;
+          document.getElementById('modalPairCodeBox').classList.remove('hidden');
+        } else {
+          alert("Pairing Code error: " + (data.error || "Please try again or scan QR."));
+        }
+      } catch (e) {
+        alert("Server error: " + e);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Get 8-Digit Pairing Code";
+      }
+    }
+
     loadLicenses();
+    loadWhatsAppSessions();
+    setInterval(loadWhatsAppSessions, 8000);
   </script>
 </body>
 </html>
