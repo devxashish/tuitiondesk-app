@@ -100,19 +100,37 @@
       </div>
 
       <!-- Connected Success Card (Hidden by default) -->
-      <div id="connectedCard" class="hidden glass-card rounded-3xl p-6 text-center space-y-3 border-2 border-emerald-500/50 shadow-2xl">
-        <div class="w-14 h-14 mx-auto rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-400 flex items-center justify-center text-2xl">
+      <div id="connectedCard" class="hidden glass-card rounded-3xl p-6 text-center space-y-4 border-2 border-emerald-500/50 shadow-2xl">
+        <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 border-2 border-emerald-400/50 text-emerald-400 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/20 animate-pulse">
           ✓
         </div>
-        <h2 class="text-lg font-black text-white">WhatsApp Successfully Linked!</h2>
+        <div>
+          <h2 class="text-xl font-black text-white">WhatsApp Connected & Active!</h2>
+          <p class="text-xs text-emerald-300 font-semibold mt-1">This Device is Linked & Automation is Live</p>
+        </div>
+        
+        <div class="p-3 rounded-2xl bg-slate-900/70 border border-white/5 space-y-1">
+          <div class="text-[11px] text-slate-400">Linked WhatsApp Number</div>
+          <div id="connPhoneDisplay" class="font-mono text-base font-extrabold text-emerald-400 tracking-wider">+91 8818050651</div>
+          <div id="connTokenDisplay" class="text-[10px] font-mono text-slate-500 truncate">Token: Loading...</div>
+        </div>
+
         <p class="text-xs text-slate-300 leading-relaxed">
-          Aapka WhatsApp session background automation ke liye active ho chuka hai. Daily attendance aur fee receipts ab is number se automatically deliver hongi.
+          Aapka WhatsApp session permanently link ho chuka hai. Fee reminders, attendance alerts, aur student notices automatically dispatch honge. Is browser window ya app me dobara QR scan karne ki zaroorat nahi hai.
         </p>
-        <div class="pt-2">
-          <span class="text-[11px] font-bold text-emerald-300 bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-800">
-            ● Automation Active • Aap yeh tab band kar sakte hain
+
+        <div class="pt-1 flex flex-col gap-2">
+          <button onclick="sendTestPing()" id="btnTestPing" class="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 border border-emerald-500/40 transition-all flex items-center justify-center gap-2">
+            <span>🔔</span> Send Test Verification Alert
+          </button>
+          <div id="testPingMsg" class="text-[11px] font-medium hidden"></div>
+          <span class="text-[11px] font-bold text-emerald-400/80 bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-800/80">
+            ● Background Automation Active • You can close this tab
           </span>
         </div>
+      </div>
+
+      </div>
       </div>
 
       <!-- Connection Methods Container -->
@@ -205,6 +223,74 @@
     let timerInterval = null;
     let isConnected = false;
 
+    function showConnectedCard(phone, token, withConfetti = true) {
+      isConnected = true;
+      if (timerInterval) clearInterval(timerInterval);
+      if (qrAutoRefreshTimer) { clearInterval(qrAutoRefreshTimer); qrAutoRefreshTimer = null; }
+      
+      document.getElementById('loadingCard').classList.add('hidden');
+      document.getElementById('expiredCard').classList.add('hidden');
+      const box = document.getElementById('activeSessionBox');
+      if (box) box.classList.add('hidden');
+      const connCont = document.getElementById('connectContainer');
+      if (connCont) connCont.classList.add('hidden');
+      
+      const card = document.getElementById('connectedCard');
+      card.classList.remove('hidden');
+      
+      const phoneEl = document.getElementById('connPhoneDisplay');
+      if (phoneEl) phoneEl.textContent = phone ? ('+91 ' + phone.replace(/[^0-9]/g, '')) : '+91 ' + sessionPhone;
+      const tokenEl = document.getElementById('connTokenDisplay');
+      if (tokenEl) tokenEl.textContent = 'Session: ' + token;
+
+      if (withConfetti && typeof confetti === 'function') {
+        confetti({ particleCount: 140, spread: 85, origin: { y: 0.6 } });
+      }
+
+      if (ticket) {
+        fetch(`${baseApi}/api/whatsapp/use-ticket`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ ticket: ticket })
+        }).catch(() => {});
+      }
+    }
+
+    async function sendTestPing() {
+      const btn = document.getElementById('btnTestPing');
+      const msg = document.getElementById('testPingMsg');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Sending WhatsApp Alert...';
+      msg.classList.remove('hidden');
+      msg.className = 'text-[11px] font-medium text-amber-300 animate-pulse';
+      msg.textContent = 'Dispatching test notification to ' + sessionPhone + '...';
+
+      try {
+        const res = await fetch(`${baseApi}/api/whatsapp/send-message`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            token: sessionToken,
+            phone: sessionPhone,
+            message: '🎓 TuitionDesk Automation: Congratulations! Aapka WhatsApp successfully connect ho chuka hai. Fee alerts aur daily attendance notifications ab is number se automatically jayengi.'
+          })
+        });
+        const d = await res.json();
+        if (d.success) {
+          msg.className = 'text-[11px] font-bold text-emerald-400';
+          msg.textContent = '✅ Delivered! Kripya apna WhatsApp open karke check karein.';
+        } else {
+          msg.className = 'text-[11px] font-bold text-rose-400';
+          msg.textContent = '⚠️ ' + (d.error || 'Delivery queued.');
+        }
+      } catch (e) {
+        msg.className = 'text-[11px] font-bold text-amber-400';
+        msg.textContent = 'Request submitted to server bot.';
+      }
+      btn.disabled = false;
+      btn.innerHTML = '<span>🔔</span> Send Test Verification Alert';
+    }
+
     async function initTicket() {
       // 1. If ticket is provided, verify it with backend
       if (ticket) {
@@ -214,6 +300,10 @@
           if (data.valid) {
             sessionToken = data.token;
             sessionPhone = data.phone || '8818050651';
+            if (data.is_already_connected) {
+              showConnectedCard(sessionPhone, sessionToken, false);
+              return;
+            }
             remainingSeconds = data.remaining_seconds || 300;
             startSession();
             return;
@@ -367,21 +457,7 @@
         const res = await fetch(`${baseApi}/api/whatsapp/status?token=${encodeURIComponent(sessionToken)}`);
         const data = await res.json();
         if (data.connected) {
-          isConnected = true;
-          if (timerInterval) clearInterval(timerInterval);
-          if (qrAutoRefreshTimer) { clearInterval(qrAutoRefreshTimer); qrAutoRefreshTimer = null; }
-          document.getElementById('connectContainer').classList.add('hidden');
-          document.getElementById('connectedCard').classList.remove('hidden');
-          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-
-          // Mark ticket as used on server
-          if (ticket) {
-            fetch(`${baseApi}/api/whatsapp/use-ticket`, {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({ ticket: ticket })
-            }).catch(() => {});
-          }
+          showConnectedCard(data.phone || sessionPhone, sessionToken, true);
           return;
         } else if (data.status === 'syncing') {
           const qrStatusText = document.getElementById('qrStatusText');
