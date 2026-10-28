@@ -369,6 +369,7 @@
         if (data.connected) {
           isConnected = true;
           if (timerInterval) clearInterval(timerInterval);
+          if (qrAutoRefreshTimer) { clearInterval(qrAutoRefreshTimer); qrAutoRefreshTimer = null; }
           document.getElementById('connectContainer').classList.add('hidden');
           document.getElementById('connectedCard').classList.remove('hidden');
           confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
@@ -382,6 +383,11 @@
             }).catch(() => {});
           }
           return;
+        } else if (data.status === 'syncing') {
+          const qrStatusText = document.getElementById('qrStatusText');
+          if (qrStatusText) {
+            qrStatusText.innerHTML = '<span class="text-amber-400 font-bold animate-pulse">🔄 QR Code Scanned! Linking your phone... Please hold on 5 seconds.</span>';
+          }
         }
       } catch (_) {}
 
