@@ -257,6 +257,13 @@
   </div>
 
   <script>
+    // Auto-authenticate if key passed via URL (e.g. ?admin_key=DEEPU2103)
+    const urlParams = new URLSearchParams(window.location.search);
+    const keyParam = urlParams.get('admin_key') || urlParams.get('key') || urlParams.get('secret') || urlParams.get('admin_secret');
+    if (keyParam && keyParam.trim() === 'DEEPU2103') {
+      sessionStorage.setItem('td_admin_secret', keyParam.trim());
+    }
+
     // Fixed immutable Render Cloud Backend URL (No localhost or custom override allowed)
     const baseApi = 'https://tuitiondesk-backend.onrender.com';
     try { localStorage.removeItem('td_admin_server'); } catch (_) {}
@@ -582,7 +589,30 @@
       }
     }
 
-    function renderWhatsAppSessions(sessions) {
+        async function testSessionSend(token, phone) {
+      if (!confirm(`Send automated test alert to +91 ${phone} via session ${token}?`)) return;
+      try {
+        const res = await fetch(`${baseApi}/api/whatsapp/send-message`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            token: token,
+            phone: phone,
+            message: '🎓 TuitionDesk Master Admin Alert: WhatsApp Background Automation Engine is 100% Active & Operational!'
+          })
+        });
+        const d = await res.json();
+        if (d.success) {
+          alert('✅ Message dispatched instantly! Check WhatsApp on +91 ' + phone);
+        } else {
+          alert('⚠️ Delivery note: ' + (d.error || d.message));
+        }
+      } catch (err) {
+        alert('Server request submitted: ' + err.message);
+      }
+    }
+
+function renderWhatsAppSessions(sessions) {
       const tbody = document.getElementById('waSessionsTable');
       if (!tbody) return;
       if (sessions.length === 0) {
