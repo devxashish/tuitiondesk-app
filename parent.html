@@ -374,10 +374,8 @@
 
       // Try notifying backend server
       try {
-        const endpoint = (window.location.protocol.startsWith('http') && !window.location.hostname.includes('github.io')) 
-          ? '/api/parent/submit-payment' 
-          : 'http://127.0.0.1:3000/api/parent/submit-payment';
-        await fetch(endpoint, {
+        const baseApi = 'https://tuitiondesk-backend.onrender.com';
+        await fetch(`${baseApi}/api/parent/submit-payment`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
