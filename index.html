@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TuitionDesk - Modern Coaching & Tuition Management Software (India)</title>
+  <!-- SEO & Search Engine Optimization -->
+  <meta name="description" content="TuitionDesk - #1 Offline-First Coaching & Tuition Management Software in India. Automated WhatsApp fee reminders, 1-tap UPI payment QR codes, attendance tracking, and test analytics.">
+  <meta name="keywords" content="tuition management app, coaching software india, automated whatsapp fee reminder, upi qr fee payment, attendance app for tutors, offline tuition software, coaching institute erp">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://devxashish.github.io/tuitiondesk-app/">
+
+  <!-- OpenGraph Metadata (WhatsApp, Facebook, LinkedIn previews) -->
+  <meta property="og:title" content="TuitionDesk - Coaching & Tuition Management Software India">
+  <meta property="og:description" content="Automate WhatsApp fee notices, 1-tap UPI QR payments, attendance & test analytics for your coaching centre.">
+  <meta property="og:image" content="https://devxashish.github.io/tuitiondesk-app/icon-512.png">
+  <meta property="og:url" content="https://devxashish.github.io/tuitiondesk-app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TuitionDesk">
+  <meta property="og:locale" content="en_IN">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TuitionDesk - Smart Coaching Management App">
+  <meta name="twitter:description" content="1-Tap WhatsApp fee reminders, UPI QR collection, student attendance, and weekly tests for Indian tutors.">
+  <meta name="twitter:image" content="https://devxashish.github.io/tuitiondesk-app/icon-512.png">
+
+  <!-- LLM & AI Search Engine Structured Data (JSON-LD for ChatGPT, Perplexity, Gemini, Claude) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "TuitionDesk",
+        "operatingSystem": "Android, Windows, Web",
+        "applicationCategory": "BusinessApplication, EducationalApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "INR"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "ratingCount": "1250"
+        },
+        "description": "TuitionDesk is India's leading offline-first tuition and coaching management software, offering automated WhatsApp fee reminders, 1-tap UPI QR codes, attendance tracking, and test analytics.",
+        "featureList": [
+          "Automated WhatsApp fee reminders with UPI payment link",
+          "1-Tap UPI QR Code generation with zero commission",
+          "Daily attendance tracking with instant WhatsApp absent alerts",
+          "Weekly test scorecards and batch ranking charts",
+          "Hardware Device ID activation locking for anti-piracy",
+          "Offline-first local SQLite database (works without internet)"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is TuitionDesk?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "TuitionDesk is an all-in-one coaching management mobile and desktop software designed for Indian tutors, coaching classes, and private institutes to manage fees, attendance, tests, and student records."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does automated WhatsApp fee reminder work in TuitionDesk?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "TuitionDesk connects with your WhatsApp session and automatically dispatches personalized fee notices with student name, batch, due amount, and a direct UPI payment link with QR code."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does TuitionDesk require internet to work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No! TuitionDesk is built with an offline-first architecture. All student records, fees, and attendance are securely stored locally on your device in SQLite."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there any commission on UPI payments?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Zero commission. 100% of the tuition fee goes directly from parents to the teacher's registered UPI bank account."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  
+  <!-- PWA & Mobile Web App Meta -->
+  <meta name="theme-color" content="#0F766E">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TuitionDesk">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230F766E'%3E%3Cpath d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.45 9L12 4.34 20.55 9 12 13.66 3.45 9zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#16a34a',
+              600: '#15803d',
+              700: '#166534',
+              primary: '#0F766E',
+              primaryDark: '#0D5F59',
+              accent: '#F59E0B',
+              whatsapp: '#25D366',
+              upi: '#5f259f'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: none;
+    }
+    .heading-font {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .safe-top {
+      padding-top: max(0.6rem, env(safe-area-inset-top));
+    }
+    .safe-bottom {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+    /* Native App Ripple Feel */
+    .app-tap {
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+    .app-tap:active {
+      transform: scale(0.97);
+      opacity: 0.92;
+    }
+    /* Bottom Sheet slide up */
+    @media (max-width: 639px) {
+      .modal-bottom-sheet {
+        align-items: flex-end !important;
+        padding: 0 !important;
+      }
+      .modal-bottom-sheet > div {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        border-top-left-radius: 1.5rem !important;
+        border-top-right-radius: 1.5rem !important;
+        max-height: 90vh;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] sm:bg-[#E5E5EA] text-slate-800 antialiased h-[100dvh] flex flex-col items-center justify-center sm:py-3 selection:bg-teal-500 selection:text-white">
+
+  <!-- Mobile App Viewport Container (Edge-to-edge on Mobile, Clean Card on Desktop) -->
+  <div id="appContainer" class="w-full sm:max-w-md bg-[#F2F2F7] h-[100dvh] sm:h-[860px] sm:max-h-[96vh] sm:rounded-3xl sm:shadow-2xl sm:border sm:border-slate-300/80 relative flex flex-col overflow-hidden font-sans">
+
+    <!-- Native iOS 17 Translucent App Header -->
+    <header class="bg-white/85 backdrop-blur-xl border-b border-slate-200/80 text-slate-900 px-4 pt-3 pb-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-30 safe-top shrink-0">
+      <div class="flex items-center justify-between">
+        <!-- Logo & Coaching Title -->
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-teal-600 text-white flex items-center justify-center shadow-sm">
+            <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-1.5">
+              <h1 class="font-bold text-[17px] text-slate-900 leading-tight tracking-tight">TuitionDesk</h1>
+              <span class="text-[9px] font-extrabold bg-teal-100 text-teal-800 px-1.5 py-0.5 rounded-full uppercase tracking-wider">PRO</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium" id="headerSubtitle">Apex Academy</p>
+          </div>
+        </div>
+
+        <!-- Right Action Items (Clean Header without extra Add Student icon) -->
+        <div class="flex items-center space-x-2">
+          <!-- Install App Button (PWA) -->
+          <button id="installAppBtn" onclick="installPwaApp()" class="hidden text-[10px] font-bold bg-amber-400 text-amber-950 px-2.5 py-1 rounded-full items-center space-x-1 shadow-sm transition app-tap">
+            <i data-lucide="download" class="w-3 h-3"></i>
+            <span>Install</span>
+          </button>
+
+          <!-- WhatsApp Status Capsule Pill -->
+          <button onclick="openWhatsAppBotModal()" id="headerWaStatusPill" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[11px] font-semibold app-tap shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="headerWaStatusText">WhatsApp Active</span>
+          </button>
+
+          <!-- Teacher Profile & Settings Button -->
+          <button onclick="openTeacherProfileModal()" title="Teacher Profile & Classes" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200/80 border border-slate-200/60 flex items-center justify-center text-slate-700 transition app-tap">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Scrollable Screen Content Area -->
+    <main id="mainContent" class="flex-1 overflow-y-auto bg-[#F2F2F7] pb-6 relative no-scrollbar">
+
+      <!-- ============================================== -->
+      <!-- TAB 1: FEES PENDING SCREEN                      -->
+      <!-- ============================================== -->
+      <section id="tab-fees" class="tab-screen p-4 space-y-4">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200/70 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+            <div class="flex items-center justify-between text-slate-500 text-xs mb-1">
+              <span>Pending Dues</span>
+              <span class="p-1 rounded-md bg-rose-50 text-rose-600"><i data-lucide="clock" class="w-3.5 h-3.5"></i></span>
+            </div>
+            <div class="text-xl font-bold text-slate-800" id="totalPendingAmount">₹28,500</div>
+            <div class="text-[11px] text-rose-600 font-semibold flex items-center mt-1">
+              <span id="pendingCountBadge">7 students late</span>
+            </div>
+          </div>
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200/70 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+            <div class="flex items-center justify-between text-slate-500 text-xs mb-1">
+              <span>Collected This Month</span>
+              <span class="p-1 rounded-md bg-emerald-50 text-emerald-600"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i></span>
+            </div>
+            <div class="text-xl font-bold text-slate-800" id="feesCollectedAmount">₹84,000</div>
+            <div class="text-[11px] text-emerald-600 font-semibold mt-1">
+              <span>74% target met</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- WhatsApp Broadcast Action Card (iOS 17 Styled with Dual Buttons) -->
+        <div class="bg-gradient-to-br from-teal-700 via-emerald-700 to-teal-800 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-emerald-100 flex items-center gap-1.5">
+                <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Automated Fee Reminders
+              </span>
+              <span class="text-[10px] bg-emerald-900/60 px-2 py-0.5 rounded-full border border-emerald-400/30 font-medium">WhatsApp Direct</span>
+            </div>
+            <h3 class="font-bold text-base leading-snug">Broadcast Fee Notice to All</h3>
+            <p class="text-xs text-emerald-100/90 mt-1 mb-3.5 leading-relaxed">
+              Sends personalized dues breakdown with payment UPI QR to <span class="font-bold underline" id="remindAllCount">7</span> overdue parents.
+            </p>
+            
+            <!-- Dual Action Buttons: Primary + Dedicated Secondary Below -->
+            <div class="space-y-2">
+              <button onclick="broadcastToAllLateStudents()" id="btnBroadcastAll" class="w-full bg-white hover:bg-emerald-50 active:scale-[0.99] text-emerald-950 font-bold py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-xs app-tap">
+                <i data-lucide="send" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span id="btnBroadcastAllText">Remind All Late Students</span>
+              </button>
+              <button onclick="openRemindAllModal()" class="w-full bg-emerald-900/60 hover:bg-emerald-900/80 active:scale-[0.99] text-white font-semibold py-2 px-4 rounded-xl border border-emerald-400/30 transition flex items-center justify-center space-x-2 text-xs app-tap">
+                <i data-lucide="check-square" class="w-3.5 h-3.5 text-emerald-300"></i>
+                <span>Select Specific Students to Remind</span>
+              </button>
+            </div>
+          </div>
+          <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="flex items-center gap-2">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            <input type="text" id="feesSearchInput" oninput="renderFeesList()" placeholder="Search student or class..." class="w-full bg-white border border-slate-200/80 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+          </div>
+          <select id="feesBatchFilter" onchange="renderFeesList()" class="bg-white border border-slate-200/80 rounded-xl px-2.5 py-2 text-xs text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+            <option value="ALL">All Batches</option>
+          </select>
+        </div>
+
+        <!-- Student Pending Fees List -->
+        <div>
+          <div class="flex items-center justify-between text-xs font-bold text-slate-500 px-1 mb-2">
+            <span>STUDENTS & DUES</span>
+            <button onclick="openAddStudentModal()" class="text-[11px] bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded-lg border border-teal-200 flex items-center space-x-1 shadow-xs transition app-tap">
+              <i data-lucide="user-plus" class="w-3 h-3 text-teal-600"></i>
+              <span>+ Add Student</span>
+            </button>
+          </div>
+          <div id="feesListContainer" class="space-y-2.5">
+            <!-- Dynamic student cards rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: ATTENDANCE SCREEN                        -->
+      <!-- ============================================== -->
+      <section id="tab-attendance" class="tab-screen p-4 space-y-4 hidden">
+        <!-- Date and Batch selector header -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Attendance Session</div>
+                <div class="text-sm font-bold text-slate-800" id="attendanceDateLabel">Today</div>
+              </div>
+            </div>
+            <input type="date" id="attendanceDatePicker" value="2026-10-25" onchange="changeAttendanceDate(this.value)" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-700 font-semibold focus:ring-1 focus:ring-teal-500">
+          </div>
+
+          <!-- Batch selection pill tabs -->
+          <div>
+            <label class="text-[11px] font-bold text-slate-500 block mb-1.5">Select Batch:</label>
+            <div class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar" id="batchPillsContainer">
+              <!-- Dynamically populated batches -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance Stats Counters -->
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-[11px] text-slate-500 font-medium">Total</div>
+            <div class="text-base font-bold text-slate-800" id="attTotalCount">12</div>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
+            <div class="text-[11px] text-emerald-700 font-semibold">Present (P)</div>
+            <div class="text-base font-bold text-emerald-800" id="attPresentCount">10</div>
+          </div>
+          <div class="bg-rose-50 border border-rose-200 p-2.5 rounded-xl">
+            <div class="text-[11px] text-rose-700 font-semibold">Absent (A)</div>
+            <div class="text-base font-bold text-rose-800" id="attAbsentCount">2</div>
+          </div>
+        </div>
+
+        <!-- Bulk Mark All Present / Absent Buttons -->
+        <div class="flex items-center justify-between px-1 text-xs">
+          <span class="text-slate-500 font-bold">BATCH ROSTER</span>
+          <div class="flex space-x-2">
+            <button onclick="bulkMarkAttendance('P')" class="text-emerald-700 hover:text-emerald-800 font-bold text-[11px] bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 transition app-tap">
+              All Present
+            </button>
+            <button onclick="bulkMarkAttendance('A')" class="text-rose-700 hover:text-rose-800 font-bold text-[11px] bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200 transition app-tap">
+              All Absent
+            </button>
+          </div>
+        </div>
+
+        <!-- Attendance Roster List -->
+        <div id="attendanceListContainer" class="space-y-2">
+          <!-- Dynamically populated with P/A toggles -->
+        </div>
+
+        <!-- Save Button with Instant WhatsApp Absent Alert Trigger -->
+        <div class="sticky bottom-2 z-10 pt-2">
+          <button onclick="saveAttendanceAndAlert()" class="w-full bg-teal-700 hover:bg-teal-800 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm border border-teal-600 app-tap">
+            <i data-lucide="bell-ring" class="w-4 h-4 text-amber-300"></i>
+            <span>Save & Notify Absent Parents</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: WEEKLY TEST REPORT                       -->
+      <!-- ============================================== -->
+      <section id="tab-tests" class="tab-screen p-4 space-y-4 hidden">
+        <!-- Test selection & New test action -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-bold tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded">Weekly Test Series</span>
+              <h2 class="text-base font-bold text-slate-800 mt-1">Physics: Electricity & Magnetism</h2>
+            </div>
+            <button onclick="openNewTestModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-2.5 py-1.5 rounded-lg flex items-center space-x-1 transition app-tap">
+              <i data-lucide="plus" class="w-3.5 h-3.5 text-teal-600"></i>
+              <span>New Test</span>
+            </button>
+          </div>
+          <div class="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100 font-medium">
+            <span>Date: <strong>Sunday, 19 Oct</strong></span>
+            <span>Max Marks: <strong>50</strong></span>
+            <span>Batch: <strong>Class 10 Foundation</strong></span>
+          </div>
+        </div>
+
+        <!-- Student Selector for 6-Test Progress Graph -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <i data-lucide="trending-up" class="w-4 h-4 text-teal-600"></i>
+              <span>Progress Tracker (Last 6 Tests)</span>
+            </label>
+            <select id="testStudentSelect" onchange="updateStudentTestChart()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-700 font-semibold focus:ring-1 focus:ring-teal-500">
+              <!-- Dynamically populated students -->
+            </select>
+          </div>
+
+          <!-- Highlight badge for selected student -->
+          <div id="studentTestHighlight" class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl text-center border border-slate-100">
+            <div>
+              <span class="text-[10px] text-slate-500 block">Latest Score</span>
+              <span class="text-sm font-bold text-teal-700" id="statLatestScore">46/50 (92%)</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-500 block">Class Rank</span>
+              <span class="text-sm font-bold text-amber-600" id="statClassRank">Rank #1 🏆</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-500 block">Batch Avg</span>
+              <span class="text-sm font-bold text-slate-700" id="statBatchAvg">34.2 / 50</span>
+            </div>
+          </div>
+
+          <!-- Chart Container -->
+          <div class="relative h-44 w-full pt-1">
+            <canvas id="testProgressChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Test Rank List with WhatsApp Share Button -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1 text-xs">
+            <span class="text-slate-500 font-bold">STUDENT SCOREBOARD & RANKS</span>
+            <button onclick="shareAllTestReports()" class="text-teal-700 hover:text-teal-900 font-bold text-[11px] flex items-center gap-1 app-tap">
+              <i data-lucide="share-2" class="w-3 h-3"></i> WhatsApp All
+            </button>
+          </div>
+          <div id="testRankListContainer" class="space-y-2">
+            <!-- Dynamically populated test rank items -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: PARENT VIEW / APP                        -->
+      <!-- ============================================== -->
+      <section id="tab-parent" class="tab-screen p-4 space-y-4 hidden">
+        <!-- Parent Header with Student Switcher -->
+        <div class="bg-gradient-to-br from-slate-900 to-teal-950 text-white p-4 rounded-2xl shadow-md space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider">Parent Portal</span>
+            </div>
+            <select id="parentStudentSelect" onchange="renderParentPortal()" class="bg-white/10 text-white text-xs border border-white/20 rounded-lg px-2.5 py-1 font-semibold focus:outline-none">
+              <!-- Dynamically populated students -->
+            </select>
+          </div>
+
+          <div class="flex items-center space-x-3 pt-1">
+            <div id="parentStudentAvatar" class="w-12 h-12 rounded-2xl bg-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-inner border border-teal-400/30">
+              AS
+            </div>
+            <div>
+              <h2 class="text-base font-bold heading-font leading-tight" id="parentStudentName">Aarav Sharma</h2>
+              <p class="text-xs text-teal-200/90" id="parentStudentBatch">Class 10 - Foundation • Roll #101</p>
+              <div class="text-[11px] text-slate-300 flex items-center gap-2 mt-0.5 font-medium">
+                <span>Parent: Rajesh Sharma</span>
+                <span>•</span>
+                <span class="text-emerald-300 font-mono">+91 98765 43210</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. Attendance % Card -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <i data-lucide="check-check" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-slate-800">Monthly Attendance</h3>
+                <p class="text-[10px] text-slate-500 font-medium">Current Session</p>
+              </div>
+            </div>
+            <span class="text-xl font-extrabold text-emerald-600" id="parentAttendancePercent">92%</span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden mb-2">
+            <div id="parentAttendanceBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 92%"></div>
+          </div>
+
+          <div class="flex justify-between text-[11px] text-slate-600 font-medium">
+            <span>Present: <strong class="text-emerald-700" id="parentPresentDays">23 Days</strong></span>
+            <span>Absent: <strong class="text-rose-600" id="parentAbsentDays">2 Days</strong></span>
+            <span>Total: <strong>25 Classes</strong></span>
+          </div>
+        </div>
+
+        <!-- 2. Homework / Today's Task Card -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-slate-800">Assigned Homework</h3>
+                <p class="text-[10px] text-slate-500 font-medium">Due Next Class</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Pending</span>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1.5">
+            <div class="text-xs font-semibold text-slate-800 flex items-center justify-between">
+              <span>Physics: NCERT Ch-12 Q. 1 to 15</span>
+              <span class="text-[10px] text-slate-500">Electricity</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Complete numericals on Ohm's Law and series/parallel resistor combinations in the homework notebook.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3. Fee Due & PAY BY UPI Card -->
+        <div class="bg-gradient-to-br from-teal-50 via-emerald-50 to-white p-4 rounded-2xl border-2 border-teal-500/40 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold shadow-sm">
+                <i data-lucide="indian-rupee" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-slate-800">Tuition Fee Status</h3>
+                <p class="text-[10px] text-slate-500" id="parentFeeMonth">Monthly Dues</p>
+              </div>
+            </div>
+            <span id="parentFeeBadge" class="text-xs font-bold bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full">
+              ₹3,500 Due
+            </span>
+          </div>
+
+          <div class="bg-white/80 backdrop-blur p-3 rounded-xl border border-teal-100 space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-600 font-medium">Due Date:</span>
+              <span class="font-bold text-slate-800" id="parentFeeDueDate">05 Oct 2026</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-600 font-medium">Late Status:</span>
+              <span class="font-bold text-rose-600" id="parentFeeDaysLate">20 Days Overdue</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons: Pay by UPI & Download Receipt -->
+          <div class="pt-1 space-y-2" id="parentFeeActionContainer">
+            <button onclick="openUpiPaymentModal()" class="w-full bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-xs app-tap">
+              <i data-lucide="smartphone" class="w-4 h-4 text-purple-200"></i>
+              <span>Pay Tuition Fee by UPI</span>
+            </button>
+            <button onclick="openReceiptModal()" class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 text-xs app-tap">
+              <i data-lucide="receipt" class="w-3.5 h-3.5 text-teal-600"></i>
+              <span>Official Payment Receipt</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 5: OWNER DASHBOARD                          -->
+      <!-- ============================================== -->
+      <section id="tab-dashboard" class="tab-screen p-4 space-y-4 hidden">
+        <!-- Quick Stats Overview -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Finance & Collections</h2>
+            <span class="text-[11px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded">This Month</span>
+          </div>
+
+          <!-- Total Fees Collected vs Pending -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-emerald-50/70 border border-emerald-100 p-3 rounded-xl">
+              <div class="text-[11px] text-emerald-800 font-medium">Fees Collected</div>
+              <div class="text-xl font-extrabold text-emerald-700" id="dashCollected">₹84,000</div>
+              <div class="text-[10px] text-emerald-600 font-medium mt-0.5">24 payments cleared</div>
+            </div>
+            <div class="bg-rose-50/70 border border-rose-100 p-3 rounded-xl">
+              <div class="text-[11px] text-rose-800 font-medium">Fees Pending</div>
+              <div class="text-xl font-extrabold text-rose-700" id="dashPending">₹28,500</div>
+              <div class="text-[10px] text-rose-600 font-medium mt-0.5">7 students remaining</div>
+            </div>
+          </div>
+
+          <!-- Collection Rate Progress -->
+          <div>
+            <div class="flex justify-between text-[11px] font-semibold mb-1">
+              <span class="text-slate-600">Collection Rate</span>
+              <span class="text-teal-700 font-bold" id="dashCollectionPercent">74.6%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+              <div id="dashCollectionBar" class="bg-emerald-500 h-3 transition-all duration-500" style="width: 74.6%"></div>
+              <div id="dashPendingBar" class="bg-rose-400 h-3 transition-all duration-500" style="width: 25.4%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student & Batch Metrics -->
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-[10px] text-slate-500 font-semibold uppercase">Students</div>
+            <div class="text-lg font-bold text-slate-800" id="dashTotalStudents">31</div>
+            <div class="text-[10px] text-teal-600 font-medium">4 Batches</div>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-[10px] text-slate-500 font-semibold uppercase">Attendance</div>
+            <div class="text-lg font-bold text-emerald-600" id="dashTodayAtt">87%</div>
+            <div class="text-[10px] text-slate-400 font-medium">24 / 28 present</div>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-[10px] text-slate-500 font-semibold uppercase">Enquiries</div>
+            <div class="text-lg font-bold text-amber-600" id="dashEnquiryCount">5</div>
+            <div class="text-[10px] text-amber-700 font-medium">Referrals</div>
+          </div>
+        </div>
+
+        <!-- "Refer a Friend" Enquiries Section -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                <i data-lucide="gift" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-slate-800">Referral Enquiries</h3>
+                <p class="text-[10px] text-slate-500 font-medium">Admission Leads</p>
+              </div>
+            </div>
+            <button onclick="openNewEnquiryModal()" class="text-xs bg-amber-500 hover:bg-amber-600 text-white font-bold px-2.5 py-1.5 rounded-lg flex items-center space-x-1 transition shadow-sm app-tap">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Add Lead</span>
+            </button>
+          </div>
+
+          <!-- Enquiries List -->
+          <div id="enquiriesListContainer" class="space-y-2">
+            <!-- Dynamically populated enquiries -->
+          </div>
+        </div>
+
+        <!-- Automation Workflows Widget -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white p-4 rounded-2xl shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-300 flex items-center justify-center">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+              </div>
+              <h3 class="text-xs font-bold">TuitionDesk Automations</h3>
+            </div>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-medium">Active</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div class="bg-white/5 border border-white/10 p-2.5 rounded-xl space-y-1">
+              <div class="flex items-center space-x-1.5 text-amber-300 font-semibold">
+                <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i>
+                <span>5th Fee Reminder</span>
+              </div>
+              <p class="text-[10px] text-slate-300">Auto sends on 5th & re-alerts late dues automatically.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 p-2.5 rounded-xl space-y-1">
+              <div class="flex items-center space-x-1.5 text-rose-300 font-semibold">
+                <i data-lucide="user-x" class="w-3.5 h-3.5"></i>
+                <span>Instant Absent Alert</span>
+              </div>
+              <p class="text-[10px] text-slate-300">WhatsApp message dispatches when attendance is saved.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 p-2.5 rounded-xl space-y-1">
+              <div class="flex items-center space-x-1.5 text-indigo-300 font-semibold">
+                <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
+                <span>Sunday Test Card</span>
+              </div>
+              <p class="text-[10px] text-slate-300">Weekly ranks & progress bar sent to parents on WhatsApp.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 p-2.5 rounded-xl space-y-1">
+              <div class="flex items-center space-x-1.5 text-emerald-300 font-semibold">
+                <i data-lucide="receipt" class="w-3.5 h-3.5"></i>
+                <span>Instant UPI Receipt</span>
+              </div>
+              <p class="text-[10px] text-slate-300">Verified digital receipt issued upon payment.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (5 Native Mobile Tabs) -->
+    <nav class="shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-200/80 px-2 pt-1.5 safe-bottom flex justify-around items-center z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]">
+      <!-- 1. Fees -->
+      <button onclick="switchTab('fees')" id="nav-btn-fees" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-teal-700 transition app-tap">
+        <div class="relative">
+          <i data-lucide="banknote" class="w-5 h-5"></i>
+          <span id="navFeeBadge" class="absolute -top-1 -right-2 bg-rose-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">7</span>
+        </div>
+        <span class="text-[10px] font-bold mt-1">Fees</span>
+      </button>
+
+      <!-- 2. Attendance -->
+      <button onclick="switchTab('attendance')" id="nav-btn-attendance" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
+        <i data-lucide="calendar-check-2" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold mt-1">Attendance</span>
+      </button>
+
+      <!-- 3. Tests -->
+      <button onclick="switchTab('tests')" id="nav-btn-tests" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
+        <i data-lucide="award" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold mt-1">Tests</span>
+      </button>
+
+      <!-- 4. Parent View -->
+      <button onclick="switchTab('parent')" id="nav-btn-parent" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
+        <i data-lucide="shield-check" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold mt-1">Parent App</span>
+      </button>
+
+      <!-- 5. Owner Dashboard -->
+      <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
+        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold mt-1">Dashboard</span>
+      </button>
+    </nav>
+
+    <!-- Global Toast Notification -->
+    <div id="toastNotification" class="absolute top-16 left-4 right-4 bg-slate-900 text-white p-3 rounded-xl shadow-2xl z-50 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center space-x-3">
+      <div id="toastIconContainer" class="p-1 rounded-lg bg-emerald-500/20 text-emerald-400">
+        <i data-lucide="check" class="w-4 h-4"></i>
+      </div>
+      <div class="flex-1">
+        <p class="text-xs font-bold" id="toastTitle">Notification</p>
+        <p class="text-[11px] text-slate-300" id="toastMessage">Action completed successfully.</p>
+      </div>
+    </div>
+
+  </div> <!-- End App Container -->
+
+  <!-- ============================================== -->
+  <!-- MODALS & BOTTOM SHEETS                         -->
+  <!-- ============================================== -->
+
+  <!-- 1. WhatsApp Action Modal -->
+  <div id="whatsappModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-in fade-in duration-200">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-[#075E54] text-white p-3.5 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="message-square" class="w-5 h-5 text-[#25D366]"></i>
+          <div>
+            <h3 class="text-xs font-bold" id="waModalTitle">WhatsApp Message</h3>
+            <p class="text-[10px] text-emerald-200 font-mono" id="waModalRecipient">+91 98765 43210</p>
+          </div>
+        </div>
+        <button onclick="closeModal('whatsappModal')" class="text-emerald-100 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-4 bg-[#ECE5DD] space-y-3 max-h-[360px] overflow-y-auto">
+        <div class="bg-white rounded-lg p-3 text-xs shadow-sm space-y-2 text-slate-800 border-l-4 border-[#25D366]">
+          <p id="waModalMessage" class="whitespace-pre-line font-sans leading-relaxed"></p>
+        </div>
+      </div>
+
+      <div class="p-3 bg-white border-t border-slate-100 space-y-2">
+        <button id="waModalBotBtn" onclick="sendIndividualViaBot()" class="w-full py-2.5 px-3 text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl shadow transition flex items-center justify-center space-x-1.5 app-tap">
+          <i data-lucide="send" class="w-3.5 h-3.5 text-amber-300"></i>
+          <span>Send Message</span>
+        </button>
+        <button onclick="closeModal('whatsappModal')" class="w-full py-1.5 px-2 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 rounded-lg transition">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Remind Late Students Broadcast Modal -->
+  <div id="remindAllModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-gradient-to-r from-emerald-700 to-teal-800 text-white p-4 shrink-0">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+              <i data-lucide="send" class="w-4 h-4 text-emerald-200"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm">Send WhatsApp Reminders</h3>
+              <p class="text-[10px] text-emerald-200">Auto-sent from connected WhatsApp</p>
+            </div>
+          </div>
+          <button onclick="closeModal('remindAllModal')" class="text-emerald-100 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-3 overflow-y-auto flex-1 no-scrollbar">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex items-center justify-between text-xs">
+          <label class="flex items-center space-x-2 cursor-pointer font-bold text-slate-800 select-none">
+            <input type="checkbox" id="selectAllRemindCheck" onchange="toggleSelectAllRemind(this.checked)" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+            <span>Select All Students</span>
+          </label>
+          <span class="text-[11px] font-semibold text-teal-700" id="remindSelectedStats">7 Selected</span>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-600 block mb-1.5 uppercase tracking-wider">Select Recipients:</label>
+          <div id="remindStudentsList" class="space-y-2"></div>
+        </div>
+
+        <div id="remindProgressContainer" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-3 space-y-1.5">
+          <div class="flex justify-between items-center text-xs font-bold text-emerald-900">
+            <span id="remindProgressText">Dispatching...</span>
+            <span id="remindProgressPercent">20%</span>
+          </div>
+          <div class="w-full bg-emerald-200 rounded-full h-2 overflow-hidden">
+            <div id="remindProgressBar" class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: 20%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 bg-slate-50 border-t border-slate-200 shrink-0 flex space-x-2">
+        <button onclick="closeModal('remindAllModal')" class="py-2.5 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-200 rounded-xl transition">
+          Cancel
+        </button>
+        <button onclick="executeSelectedReminders()" id="btnSendSelectedReminders" class="flex-1 py-2.5 px-4 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white rounded-xl shadow transition flex items-center justify-center space-x-1.5 app-tap">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span id="btnSendRemindersLabel">Send Reminders</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Pay by UPI Interactive Modal with Dynamic Scannable QR -->
+  <div id="upiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-gradient-to-r from-purple-800 to-indigo-800 text-white p-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+              <i data-lucide="qr-code" class="w-4 h-4 text-purple-200"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm">Pay Tuition Fee</h3>
+              <p class="text-[10px] text-purple-200" id="upiStudentSubtitle">Aarav Sharma • Class 10</p>
+            </div>
+          </div>
+          <button onclick="closeModal('upiModal')" class="text-purple-200 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-3.5">
+        <!-- Amount Card -->
+        <div class="bg-purple-50 border border-purple-100 rounded-xl p-3 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] uppercase font-bold text-purple-700">Amount Payable</div>
+            <div class="text-xl font-extrabold text-purple-950" id="upiPayAmount">₹3,500</div>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] bg-purple-200 text-purple-900 px-2 py-0.5 rounded font-mono font-bold">tuitiondesk@okicici</span>
+          </div>
+        </div>
+
+        <!-- Real Scannable UPI QR Code -->
+        <div class="flex flex-col items-center justify-center p-3 bg-slate-50 border border-slate-200 rounded-xl">
+          <div class="w-48 h-48 bg-white p-2 rounded-xl shadow-sm border border-slate-200 flex items-center justify-center">
+            <img id="upiDynamicQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=tuitiondesk@okicici%26pn=TuitionDesk%26am=3500%26cu=INR" alt="UPI Payment QR" class="w-full h-full object-contain">
+          </div>
+          <p class="text-[10px] text-slate-500 mt-2 font-semibold">Scan with Google Pay, PhonePe, Paytm, or CRED</p>
+        </div>
+
+        <!-- Quick Intent UPI Buttons -->
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="confirmUpiPayment('Google Pay')" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition app-tap">
+            <span class="text-xs font-bold text-slate-700">Google Pay</span>
+            <span class="text-[9px] text-emerald-600 font-semibold mt-0.5">Pay Now</span>
+          </button>
+          <button onclick="confirmUpiPayment('PhonePe')" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition app-tap">
+            <span class="text-xs font-bold text-purple-700">PhonePe</span>
+            <span class="text-[9px] text-emerald-600 font-semibold mt-0.5">Pay Now</span>
+          </button>
+          <button onclick="confirmUpiPayment('Paytm')" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition app-tap">
+            <span class="text-xs font-bold text-sky-600">Paytm</span>
+            <span class="text-[9px] text-emerald-600 font-semibold mt-0.5">Pay Now</span>
+          </button>
+        </div>
+
+        <!-- Confirm Payment Received Button -->
+        <button onclick="confirmUpiPayment('UPI')" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold py-2.5 px-4 rounded-xl shadow transition text-xs flex items-center justify-center space-x-2 app-tap">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          <span>Record & Verify Payment</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Official Payment Receipt Modal -->
+  <div id="receiptModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-gradient-to-r from-teal-800 to-emerald-900 text-white p-4 relative">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">Official Fee Receipt</span>
+            <h3 class="font-bold text-base">TuitionDesk Coaching</h3>
+          </div>
+          <button onclick="closeModal('receiptModal')" class="text-emerald-100 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-3.5 bg-slate-50">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+            <div>
+              <span class="text-[10px] text-slate-400 font-semibold">RECEIPT NO.</span>
+              <div class="font-mono text-xs font-bold text-slate-800" id="receiptNumber">#TD-2026-1042</div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 font-semibold">DATE & TIME</span>
+              <div class="text-xs font-bold text-slate-700" id="receiptDateTime">25 Oct 2026, 02:15 PM</div>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-500 font-medium">Student Name:</span>
+              <span class="font-bold text-slate-800" id="receiptStudentName">Aarav Sharma</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500 font-medium">Batch / Class:</span>
+              <span class="font-bold text-slate-800" id="receiptBatch">Class 10 - Foundation</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500 font-medium">Parent WhatsApp:</span>
+              <span class="font-mono font-medium text-slate-700" id="receiptPhone">+91 98765 43210</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500 font-medium">Payment Mode:</span>
+              <span class="font-bold text-purple-700" id="receiptMode">UPI (Verified)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500 font-medium">Fee Period:</span>
+              <span class="font-medium text-slate-700">Monthly Tuition Fee</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-dashed border-slate-200 flex justify-between items-center">
+            <span class="font-bold text-slate-800 text-sm">Amount Paid:</span>
+            <span class="font-black text-lg text-emerald-700" id="receiptAmount">₹3,500</span>
+          </div>
+
+          <div class="text-center pt-1">
+            <span class="inline-block bg-emerald-100 text-emerald-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+              ✓ Verified & Cleared
+            </span>
+          </div>
+        </div>
+
+        <div class="flex space-x-2">
+          <button onclick="shareReceiptWhatsApp()" class="flex-1 py-2.5 px-3 bg-[#25D366] hover:bg-[#1ebd5a] text-white text-xs font-bold rounded-xl shadow transition flex items-center justify-center space-x-1.5 app-tap">
+            <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+            <span>Send on WhatsApp</span>
+          </button>
+          <button onclick="printReceipt()" class="py-2.5 px-3 bg-white border border-slate-300 text-slate-700 text-xs font-semibold rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-1 app-tap">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Print</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Add New Enquiry / Lead Modal -->
+  <div id="newEnquiryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-gradient-to-r from-amber-600 to-amber-700 text-white p-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm flex items-center gap-1.5">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>New Admission Enquiry</span>
+          </h3>
+          <button onclick="closeModal('newEnquiryModal')" class="text-amber-100 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <form onsubmit="handleNewEnquiry(event)" class="p-4 space-y-3">
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Student Name *</label>
+          <input type="text" id="leadName" required placeholder="Full Name" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-teal-500 font-medium">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block mb-1">Target Class *</label>
+            <select id="leadClass" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-teal-500 font-medium">
+              <option value="Class 9">Class 9</option>
+              <option value="Class 10" selected>Class 10</option>
+              <option value="Class 11">Class 11</option>
+              <option value="Class 12">Class 12</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block mb-1">Parent Phone *</label>
+            <input type="tel" id="leadPhone" required placeholder="9812345678" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-teal-500 font-mono">
+          </div>
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Referred By (Optional)</label>
+          <input type="text" id="leadReferrer" placeholder="Student or Parent Name" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-teal-500">
+        </div>
+        <div class="pt-2 flex space-x-2">
+          <button type="button" onclick="closeModal('newEnquiryModal')" class="flex-1 py-2 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 py-2 px-3 text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow app-tap">
+            Save Lead
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. STARTUP WHATSAPP QR OVERLAY (Only shows on start if NOT connected, auto-hides upon scanning) -->
+  <div id="startupQrOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-slate-200 p-6 text-center space-y-4">
+      <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+        <i data-lucide="qr-code" class="w-7 h-7 text-emerald-600"></i>
+      </div>
+      <div>
+        <h2 class="text-base font-extrabold text-slate-900 heading-font">Link WhatsApp to TuitionDesk</h2>
+        <p class="text-xs text-slate-500 mt-1">Scan this QR code to activate automatic fee reminders & absent alerts.</p>
+      </div>
+
+      <!-- Real Live QR Display -->
+      <div class="w-56 h-56 bg-slate-50 border-2 border-emerald-500/40 rounded-2xl p-3 mx-auto shadow-inner flex items-center justify-center relative">
+        <img id="startupQrImg" src="/api/whatsapp/qr.png" alt="WhatsApp QR Code" class="w-full h-full object-contain rounded-lg" onerror="handleQrError(this)">
+        <div id="startupQrSpinner" class="absolute inset-0 bg-white/80 rounded-2xl flex flex-col items-center justify-center hidden">
+          <div class="w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+          <span class="text-xs font-bold text-slate-700">Connecting...</span>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-left text-xs space-y-1 text-slate-700">
+        <div class="font-bold flex items-center gap-1.5 text-slate-900">
+          <span class="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] flex items-center justify-center font-bold">1</span>
+          <span>Open WhatsApp on your phone</span>
+        </div>
+        <div class="font-bold flex items-center gap-1.5 text-slate-900">
+          <span class="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] flex items-center justify-center font-bold">2</span>
+          <span>Go to Linked Devices -> Link a Device</span>
+        </div>
+        <div class="font-bold flex items-center gap-1.5 text-slate-900">
+          <span class="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] flex items-center justify-center font-bold">3</span>
+          <span>Point your camera at this QR code</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+        <span class="flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <span>Waiting for scan...</span>
+        </span>
+        <button onclick="closeStartupQrOverlay()" class="text-teal-700 hover:text-teal-900 font-bold underline">Skip for now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0. TEACHER ONBOARDING & PROFILE SETUP MODAL -->
+  <div id="teacherProfileModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-gradient-to-r from-teal-800 to-emerald-900 text-white p-4 shrink-0">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+              <i data-lucide="user-check" class="w-5 h-5 text-emerald-200"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm" id="teacherModalTitle">Teacher & Tuition Setup</h3>
+              <p class="text-[10px] text-teal-200">Profile, UPI & Classes Configuration</p>
+            </div>
+          </div>
+          <button onclick="closeModal('teacherProfileModal')" class="text-teal-200 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <form onsubmit="handleSaveTeacherProfile(event)" class="p-4 space-y-3.5 overflow-y-auto flex-1 no-scrollbar">
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Teacher Full Name *</label>
+          <input type="text" id="profTeacherName" required placeholder="e.g. Rajesh Sharma" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 font-medium focus:ring-1 focus:ring-teal-500">
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Tuition / Coaching Centre Name *</label>
+          <input type="text" id="profInstituteName" required placeholder="e.g. Apex Academy" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 font-medium focus:ring-1 focus:ring-teal-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block mb-1">Teacher Phone *</label>
+            <input type="tel" id="profPhone" required placeholder="9876543210" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 font-mono focus:ring-1 focus:ring-teal-500">
+          </div>
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block mb-1">Teacher UPI ID *</label>
+            <input type="text" id="profUpiId" required placeholder="name@upi" oninput="updateProfileQrPreview(this.value)" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 font-mono font-bold text-purple-900 focus:ring-1 focus:ring-purple-500">
+          </div>
+        </div>
+
+        <!-- Realtime QR Code Preview of Teacher's UPI -->
+        <div class="p-2.5 bg-purple-50/70 border border-purple-100 rounded-xl flex items-center space-x-3">
+          <div class="w-16 h-16 bg-white p-1 rounded-lg border border-purple-200 shrink-0">
+            <img id="profQrPreview" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=tuitiondesk@okicici" alt="Teacher UPI QR" class="w-full h-full object-contain">
+          </div>
+          <div class="text-[11px] text-purple-950">
+            <span class="font-bold block">Dynamic Fee UPI QR</span>
+            <span class="text-[10px] text-slate-500">Parents will scan this exact QR or click your UPI to pay.</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Classes / Batches Manager -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-3.5 h-3.5 text-teal-600"></i>
+              <span>Classes / Batches You Teach</span>
+            </label>
+            <span class="text-[10px] text-slate-400">Pre-saved for easy student enrollment</span>
+          </div>
+          
+          <div id="profClassesChips" class="flex flex-wrap gap-1.5 min-h-[30px]">
+            <!-- Dynamic Class Badges with 'x' rendered by JS -->
+          </div>
+
+          <div class="flex items-center gap-1.5 pt-1">
+            <input type="text" id="newClassInput" placeholder="+ Add Class (e.g. Class 10 Foundation)" class="flex-1 text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white focus:ring-1 focus:ring-teal-500">
+            <button type="button" onclick="addClassChip()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition app-tap">
+              + Add
+            </button>
+          </div>
+          <input type="hidden" id="profClassesList" value="Class 10 - Foundation, Class 12 - PCM Boards, Class 9 - Science, Class 11 - JEE Prep">
+        </div>
+
+        <!-- Dynamic Master Subjects Manager -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="book-open" class="w-3.5 h-3.5 text-teal-600"></i>
+              <span>Master Subjects Offered</span>
+            </label>
+            <span class="text-[10px] text-slate-400">Tap to select per student</span>
+          </div>
+          
+          <div id="profSubjectsChips" class="flex flex-wrap gap-1.5 min-h-[30px]">
+            <!-- Dynamic Subject Badges with 'x' rendered by JS -->
+          </div>
+
+          <div class="flex items-center gap-1.5 pt-1">
+            <input type="text" id="newSubjectInput" placeholder="+ Add Subject (e.g. Mathematics)" class="flex-1 text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white focus:ring-1 focus:ring-teal-500">
+            <button type="button" onclick="addSubjectChip()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition app-tap">
+              + Add
+            </button>
+          </div>
+          <input type="hidden" id="profSubjectsList" value="Mathematics, Science, Physics, Chemistry, Biology, English">
+        </div>
+
+        <div class="pt-2 flex space-x-2">
+          <button type="button" onclick="closeModal('teacherProfileModal')" class="flex-1 py-2.5 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 py-2.5 px-3 text-xs font-bold bg-teal-700 hover:bg-teal-800 text-white rounded-xl shadow transition app-tap">
+            Save Setup
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. ADD STUDENT MODAL (Simplified & Professional: No Roll No, Dynamic Batches & Clickable Subject Chips) -->
+  <div id="addStudentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-gradient-to-r from-teal-800 to-emerald-900 text-white p-4 shrink-0">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+              <i data-lucide="user-plus" class="w-4 h-4 text-emerald-200"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm">Enroll New Student</h3>
+              <p class="text-[10px] text-teal-200">Select batch & tap enrolled subjects</p>
+            </div>
+          </div>
+          <button onclick="closeModal('addStudentModal')" class="text-emerald-200 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <form onsubmit="handleAddStudent(event)" class="p-4 space-y-3 overflow-y-auto flex-1 no-scrollbar">
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Student Full Name *</label>
+          <input type="text" id="newStdName" required placeholder="e.g. Priyanshu Verma" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-teal-500 font-medium">
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Batch / Class *</label>
+          <select id="newStdBatch" onchange="handleClassDropdownChange(this.value, 'newStd')" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-teal-500 font-medium bg-white">
+            <!-- Dynamically populated from Teacher Profile -->
+          </select>
+          
+          <!-- Inline New Batch Creator (shown if teacher chooses '+ Add New Class...') -->
+          <div id="inlineNewBatchGroup" class="hidden mt-2 p-2.5 bg-teal-50/70 border border-teal-200 rounded-xl space-y-1.5">
+            <label class="text-[10px] font-bold text-teal-900 block">Create New Batch / Class:</label>
+            <div class="flex gap-1.5">
+              <input type="text" id="inlineNewBatchInput" placeholder="e.g. Class 8 - Foundation" class="flex-1 text-xs border border-teal-300 rounded-lg px-2 py-1.5 bg-white">
+              <button type="button" onclick="saveInlineNewBatch()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs px-3 py-1.5 rounded-lg font-bold app-tap">
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Clickable Subject Chips -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-[11px] font-bold text-slate-700 block">Enrolled Subjects (Tap to Select) *</label>
+            <span class="text-[10px] text-teal-700 font-semibold" id="newStdSelectedSubjectCount">2 selected</span>
+          </div>
+          <div id="newStdSubjectChipsContainer" class="flex flex-wrap gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl min-h-[44px]">
+            <!-- Clickable chips rendered dynamically by JS -->
+          </div>
+          <input type="hidden" id="newStdSubjects" value="Mathematics, Science">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block mb-1">Monthly Fee (₹) *</label>
+            <input type="number" id="newStdFee" required value="3500" placeholder="3500" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-teal-500 font-bold text-slate-800">
+          </div>
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block mb-1">Fee Due Date</label>
+            <select id="newStdDueDay" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-teal-500 font-medium bg-white">
+              <option value="05" selected>5th of every month</option>
+              <option value="10">10th of every month</option>
+              <option value="15">15th of every month</option>
+              <option value="01">1st of every month</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Parent WhatsApp Mobile *</label>
+          <div class="flex items-center">
+            <span class="bg-slate-100 border border-r-0 border-slate-200 text-xs px-2.5 py-2.5 rounded-l-xl text-slate-600 font-mono font-semibold">+91</span>
+            <input type="tel" id="newStdPhone" required placeholder="9876543210" class="w-full text-xs border border-slate-200 rounded-r-xl p-2.5 focus:ring-1 focus:ring-teal-500 font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Parent / Guardian Name</label>
+          <input type="text" id="newStdParent" placeholder="e.g. Ramesh Verma" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-teal-500">
+        </div>
+
+        <div class="pt-2 flex space-x-2">
+          <button type="button" onclick="closeModal('addStudentModal')" class="flex-1 py-2.5 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 py-2.5 px-3 text-xs font-bold bg-teal-700 hover:bg-teal-800 text-white rounded-xl shadow transition app-tap">
+            Enroll Student
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. EDIT STUDENT MONTHLY FEE, PHONE & SUBJECTS MODAL -->
+  <div id="editStudentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="font-bold text-sm" id="editStdModalTitle">Edit Student Details</h3>
+          <p class="text-[10px] text-slate-300" id="editStdModalSub">Update subjects, monthly fee or parent phone</p>
+        </div>
+        <button onclick="closeModal('editStudentModal')" class="text-slate-300 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveEditStudent(event)" class="p-4 space-y-3 overflow-y-auto flex-1 no-scrollbar">
+        <input type="hidden" id="editStdId" value="">
+
+        <!-- Clickable Subjects Selector for Student -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-[11px] font-bold text-slate-700 block">Enrolled Subjects (Tap to Toggle)</label>
+            <span class="text-[10px] text-teal-700 font-semibold" id="editStdSelectedSubjectCount"></span>
+          </div>
+          <div id="editStdSubjectChipsContainer" class="flex flex-wrap gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl min-h-[44px]">
+            <!-- Rendered dynamically by JS -->
+          </div>
+          <input type="hidden" id="editStdSubjects" value="">
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Monthly Tuition Fee (₹) *</label>
+          <input type="number" id="editStdFee" required class="w-full text-xs border border-slate-200 rounded-xl p-2.5 font-bold text-slate-900 focus:ring-1 focus:ring-teal-500">
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-700 block mb-1">Parent WhatsApp Mobile *</label>
+          <div class="flex items-center">
+            <span class="bg-slate-100 border border-r-0 border-slate-200 text-xs px-2.5 py-2.5 rounded-l-xl text-slate-600 font-mono font-semibold">+91</span>
+            <input type="tel" id="editStdPhone" required class="w-full text-xs border border-slate-200 rounded-r-xl p-2.5 focus:ring-1 focus:ring-teal-500 font-mono">
+          </div>
+        </div>
+
+        <div class="pt-2 flex space-x-2">
+          <button type="button" onclick="closeModal('editStudentModal')" class="flex-1 py-2.5 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 py-2.5 px-3 text-xs font-bold bg-teal-700 hover:bg-teal-800 text-white rounded-xl shadow transition app-tap">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+    </div>
+  </div>
+
+  <!-- 9. WHATSAPP CONNECTION STATUS HUB MODAL -->
+  <div id="whatsappBotModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-bottom-sheet hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2 sm:hidden"></div>
+      <div class="bg-gradient-to-r from-emerald-700 to-teal-800 text-white p-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+              <i data-lucide="bot" class="w-5 h-5 text-emerald-200"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm">WhatsApp Hub</h3>
+              <p class="text-[10px] text-emerald-200">Official Web Automation</p>
+            </div>
+          </div>
+          <button onclick="closeModal('whatsappBotModal')" class="text-emerald-100 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-3.5 max-h-[520px] overflow-y-auto">
+        <div id="realWaStatusCard" class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <span id="realWaDot" class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+            <div>
+              <div id="realWaStatusText" class="text-xs font-bold text-emerald-950">Bot Connected & Ready</div>
+              <div id="realWaSubStatus" class="text-[10px] text-emerald-700">Fee reminders & absent alerts active</div>
+            </div>
+          </div>
+          <button onclick="refreshBotQrCode()" class="text-[10px] bg-white border border-emerald-300 text-emerald-900 px-2 py-1 rounded-lg font-bold hover:bg-emerald-100 flex items-center gap-1">
+            <i data-lucide="rotate-cw" class="w-3 h-3"></i>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <div id="inAppConnectedBanner" class="bg-emerald-50 border-2 border-emerald-300 rounded-xl p-3.5 text-center space-y-1">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-1">
+            <i data-lucide="check-check" class="w-5 h-5"></i>
+          </div>
+          <div class="text-xs font-bold text-emerald-950">WhatsApp Connected & Active!</div>
+          <p class="text-[10px] text-emerald-700">Fee reminders, absent alerts aur receipts bina kisi browser ke aapke phone se direct dispatch hote hain.</p>
+          <div class="pt-2">
+            <button onclick="reloginWhatsApp()" class="w-full py-2 px-3 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 transition flex items-center justify-center gap-1.5 shadow-sm">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>🔄 Disconnect & Scan New Phone QR</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5 text-xs">
+            <span class="font-bold text-slate-700 flex items-center gap-1">
+              <i data-lucide="list-checks" class="w-3.5 h-3.5 text-teal-600"></i>
+              <span>Recent Dispatched Messages</span>
+            </span>
+            <span class="text-[10px] text-teal-700 font-semibold cursor-pointer" onclick="refreshBotQueue()">Refresh</span>
+          </div>
+          <div id="botQueueContainer" class="space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Sleek Liquid-Glass Universal Dialog / Prompt Modal -->
+  <div id="appCustomDialogModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[100] flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-white/15 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4 transform transition-all scale-100">
+      <div id="dialogIconBox" class="w-14 h-14 mx-auto rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-3xl shadow-lg shadow-teal-500/10">
+        ✨
+      </div>
+      <div class="space-y-1.5">
+        <h3 id="dialogTitle" class="text-base font-extrabold text-white">Notice</h3>
+        <p id="dialogMessage" class="text-xs text-slate-300 leading-relaxed"></p>
+      </div>
+      <div id="dialogInputContainer" class="hidden text-left">
+        <input type="text" id="dialogInput" class="w-full bg-slate-800/90 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-teal-400">
+      </div>
+      <div class="flex items-center justify-center gap-2 pt-2">
+        <button id="dialogBtnCancel" onclick="closeCustomDialog(false)" class="flex-1 py-2.5 px-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition hidden">
+          Cancel
+        </button>
+        <button id="dialogBtnConfirm" onclick="closeCustomDialog(true)" class="flex-1 py-2.5 px-3 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-extrabold text-xs shadow-lg shadow-teal-500/20 transition">
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script src="/app.js"></script>
+</body>
+</html>

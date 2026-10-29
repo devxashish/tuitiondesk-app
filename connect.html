@@ -124,6 +124,9 @@
             <span>🔔</span> Send Test Verification Alert
           </button>
           <div id="testPingMsg" class="text-[11px] font-medium hidden"></div>
+          <button onclick="reloginSession()" id="btnRelogin" class="w-full py-2 px-3 rounded-xl text-[11px] font-semibold bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40 transition-all flex items-center justify-center gap-1.5">
+            <span>🔄</span> Disconnect & Scan New Phone QR
+          </button>
           <span class="text-[11px] font-bold text-emerald-400/80 bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-800/80">
             ● Background Automation Active • You can close this tab
           </span>
@@ -289,6 +292,27 @@
       }
       btn.disabled = false;
       btn.innerHTML = '<span>🔔</span> Send Test Verification Alert';
+    }
+
+    async function reloginSession() {
+      if (!confirm("Aap iss WhatsApp session ko disconnect karke naya phone link karna chahte hain?")) return;
+      const btn = document.getElementById('btnRelogin');
+      if (btn) btn.innerHTML = "<span>Resetting session...</span>";
+      try {
+        const res = await fetch(`${baseApi}/api/whatsapp/relogin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: sessionToken })
+        });
+        const data = await res.json();
+        if (data.success) {
+          location.reload();
+        } else {
+          location.reload();
+        }
+      } catch (_) {
+        location.reload();
+      }
     }
 
     async function initTicket() {
