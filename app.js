@@ -2549,12 +2549,36 @@ let waPollInterval = null;
 
 function openWhatsAppBotModal() {
   openModal('whatsappBotModal');
+  populateWaStudentDropdown();
   checkRealWaStatus();
   refreshBotQueue();
 
   // Poll status every 3 seconds while modal is open
   if (waPollInterval) clearInterval(waPollInterval);
   waPollInterval = setInterval(checkRealWaStatus, 3000);
+}
+
+function populateWaStudentDropdown() {
+  const sel = document.getElementById('waQuickStudentSelect');
+  if (!sel) return;
+  const students = (window.TD_DATA && window.TD_DATA.students) || [];
+  sel.innerHTML = '<option value="">-- Choose student or type number below --</option>' +
+    students.map(s => `<option value="${s.parentPhone || s.parent_phone || ''}" data-name="${s.name || ''}">${s.name || 'Student'} (${s.batch || s.grade || 'Batch'}) - +91 ${s.parentPhone || s.parent_phone || ''}</option>`).join('');
+}
+
+function onWaStudentSelected(phone) {
+  const phoneInput = document.getElementById('realTestPhone');
+  const sel = document.getElementById('waQuickStudentSelect');
+  if (phoneInput && phone) {
+    phoneInput.value = phone.replace(/[^0-9]/g, '').slice(-10);
+  }
+  const selectedOpt = sel ? sel.options[sel.selectedIndex] : null;
+  const sName = selectedOpt ? selectedOpt.getAttribute('data-name') : '';
+  const msgArea = document.getElementById('realTestMessage');
+  if (msgArea && sName && !msgArea.value) {
+    const inst = (window.TEACHER_PROFILE && window.TEACHER_PROFILE.institute_name) || "TuitionDesk";
+    msgArea.value = `Namaste! Update regarding ${sName} from ${inst}: `;
+  }
 }
 
 function handleQrError(img) {
@@ -2585,28 +2609,29 @@ function checkRealWaStatus() {
       const connectedBanner = document.getElementById('inAppConnectedBanner');
       const qrImg = document.getElementById('inAppQrImg');
 
+      const phoneDisp = document.getElementById('waConnectedPhoneDisplay');
       if (data.connected) {
-        card.className = 'bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between';
-        dot.className = 'w-3 h-3 rounded-full bg-emerald-500 animate-pulse';
-        text.className = 'text-xs font-bold text-emerald-950';
-        text.innerText = 'Bot Connected & Active ✓';
+        card.className = 'p-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/20 shadow-sm space-y-3';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse';
+        text.className = 'text-xs font-semibold text-slate-900';
+        text.innerText = 'Account Linked & Ready';
         sub.className = 'text-[10px] text-emerald-700';
-        sub.innerText = 'Ready to auto-send in background (Zero Windows).';
+        sub.innerText = 'Automated fee notices & absent alerts are live.';
+        if (phoneDisp) phoneDisp.innerText = data.phone ? ('+91 ' + data.phone.replace(/[^0-9]/g, '').slice(-10)) : '';
 
         if (qrBox) qrBox.classList.add('hidden');
         if (connectedBanner) connectedBanner.classList.remove('hidden');
       } else {
-        card.className = 'bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between';
-        dot.className = 'w-3 h-3 rounded-full bg-amber-500 animate-pulse';
-        text.className = 'text-xs font-bold text-amber-950';
-        text.innerText = 'Scan QR Code Below to Connect';
-        sub.className = 'text-[10px] text-amber-700';
-        sub.innerText = 'Keep WhatsApp open on phone & scan this QR.';
+        card.className = 'p-4 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-3';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+        text.className = 'text-xs font-semibold text-slate-900';
+        text.innerText = 'Account Disconnected';
+        sub.className = 'text-[10px] text-slate-500';
+        sub.innerText = 'Scan the QR code below to connect your WhatsApp.';
 
         if (qrBox) qrBox.classList.remove('hidden');
         if (connectedBanner) connectedBanner.classList.add('hidden');
 
-        // Reload QR image if available
         if (qrImg && data.has_qr) {
           qrImg.src = '/api/whatsapp/qr.png?token=' + encodeURIComponent(getActiveTeacherToken()) + '&t=' + (data.last_qr_time || Date.now());
         }
