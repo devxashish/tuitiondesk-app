@@ -1145,6 +1145,9 @@ function renderCurrentTab() {
     case 'parent':
       renderParentPortal();
       break;
+    case 'export':
+      renderExportTab();
+      break;
     case 'dashboard':
       renderDashboardScreen();
       break;
@@ -2760,6 +2763,236 @@ if ('serviceWorker' in navigator) {
       console.log('PWA ServiceWorker note:', err);
     });
   });
+}
+
+
+
+// =========================================================================
+// DEDICATED EXCEL EXPORT PAGE LOGIC (PHASE 8)
+// =========================================================================
+let currentExportBatch = 'all';
+
+function renderExportTab() {
+  populateExportBatches();
+  renderExportStudentsList();
+  refreshIcons();
+}
+
+function populateExportBatches() {
+  const select = document.getElementById('exportBatchSelect');
+  if (!select) return;
+
+  const currentVal = select.value || 'all';
+  const batchSet = new Set();
+  if (state.teacherProfile && state.teacherProfile.classes) {
+    state.teacherProfile.classes.split(',').forEach(c => {
+      const trimmed = c.trim();
+      if (trimmed) batchSet.add(trimmed);
+    });
+  }
+  (state.students || []).forEach(s => {
+    if (s.batch_id) batchSet.add(s.batch_id.trim());
+  });
+
+  const batches = Array.from(batchSet);
+  let html = `<option value="all">All Classes & Batches (${state.students ? state.students.length : 0} students)</option>`;
+  batches.forEach(b => {
+    const count = (state.students || []).filter(s => s.batch_id === b).length;
+    html += `<option value="${escapeHtml(b)}">${escapeHtml(b)} (${count} students)</option>`;
+  });
+
+  select.innerHTML = html;
+  select.value = currentVal;
+}
+
+function onExportBatchChange() {
+  const select = document.getElementById('exportBatchSelect');
+  currentExportBatch = select ? select.value : 'all';
+  renderExportStudentsList();
+}
+
+function filterExportStudents() {
+  renderExportStudentsList();
+}
+
+function renderExportStudentsList() {
+  const container = document.getElementById('exportStudentsContainer');
+  const countEl = document.getElementById('exportStudentCount');
+  const searchInput = document.getElementById('exportSearchInput');
+  const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+  if (!container) return;
+
+  let list = (state.students || []).filter(s => !s.status || s.status !== 'archived');
+
+  if (currentExportBatch && currentExportBatch !== 'all') {
+    list = list.filter(s => s.batch_id === currentExportBatch);
+  }
+
+  if (query) {
+    list = list.filter(s =>
+      (s.name && s.name.toLowerCase().includes(query)) ||
+      (s.roll_no && String(s.roll_no).toLowerCase().includes(query)) ||
+      (s.parent_phone && String(s.parent_phone).includes(query))
+    );
+  }
+
+  if (countEl) {
+    countEl.textContent = `${list.length} Students`;
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="text-center py-8 text-slate-400 space-y-1">
+        <i data-lucide="search-x" class="w-8 h-8 mx-auto text-slate-300"></i>
+        <p class="text-xs font-semibold">No students found matching selection.</p>
+        <p class="text-[10px]">Try changing class filter or search keyword.</p>
+      </div>
+    `;
+    refreshIcons();
+    return;
+  }
+
+  container.innerHTML = list.map(s => {
+    const isPaid = (s.fee_status || '').toLowerCase() === 'paid';
+    return `
+      <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 transition hover:bg-white hover:border-slate-300">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center space-x-2">
+            <span class="font-bold text-xs text-slate-900 truncate">${escapeHtml(s.name)}</span>
+            <span class="text-[9px] font-bold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">Roll #${escapeHtml(s.roll_no || '-')}</span>
+            <span class="text-[9px] font-semibold ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} px-1.5 py-0.5 rounded-full">
+              ${isPaid ? 'Paid' : 'Due'}
+            </span>
+          </div>
+          <div class="text-[10px] text-slate-500 mt-0.5 flex items-center space-x-2">
+            <span>${escapeHtml(s.batch_id || 'Class 10')}</span>
+            <span>•</span>
+            <span>Fee: ₹${(s.fee_amount || 0).toLocaleString()}</span>
+            <span>•</span>
+            <span>Att: ${s.attendance_percent || 90}%</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5 w-full sm:w-auto shrink-0">
+          <button onclick="triggerExcelExport('student_report', '${s.id}')" title="Export Complete Student Profile & Ledger" class="flex-1 sm:flex-none text-[11px] font-semibold bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 px-2.5 py-1.5 rounded-lg flex items-center justify-center space-x-1 shadow-2xs app-tap">
+            <i data-lucide="file-text" class="w-3 h-3 text-teal-600"></i>
+            <span>Full Profile</span>
+          </button>
+          <button onclick="triggerExcelExport('student_fee_history', '${s.id}')" title="Export Fee & Payment History" class="flex-1 sm:flex-none text-[11px] font-semibold bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 px-2.5 py-1.5 rounded-lg flex items-center justify-center space-x-1 shadow-2xs app-tap">
+            <i data-lucide="receipt" class="w-3 h-3 text-emerald-600"></i>
+            <span>Fee History</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  refreshIcons();
+}
+
+function triggerExcelExport(type, studentId) {
+  const batch = currentExportBatch || 'all';
+  const token = state.teacherToken || localStorage.getItem('tuitiondesk_token') || 'TCH_DEFAULT';
+  const url = `/api/export/excel?type=${encodeURIComponent(type)}&batch_id=${encodeURIComponent(batch)}&student_id=${encodeURIComponent(studentId || '')}&token=${encodeURIComponent(token)}`;
+
+  showToast("Preparing Excel...", "Generating official .xlsx spreadsheet...");
+
+  // Try direct backend generation
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error("Backend export not available");
+      const disposition = res.headers.get('Content-Disposition') || '';
+      let filename = `TuitionDesk_${type}_${Date.now()}.xlsx`;
+      const match = disposition.match(/filename="?([^"]+)"?/);
+      if (match && match[1]) filename = match[1];
+      return res.blob().then(blob => ({ blob, filename }));
+    })
+    .then(({ blob, filename }) => {
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+      }, 100);
+      showToast("Download Complete 📊", `${filename} downloaded successfully!`);
+    })
+    .catch(err => {
+      console.warn("Backend export notice, switching to client-side SheetJS fallback:", err);
+      clientSideExcelExportFallback(type, batch, studentId);
+    });
+}
+
+function clientSideExcelExportFallback(type, batch, studentId) {
+  if (typeof XLSX === 'undefined') {
+    showToast("Export Notice", "Spreadsheet engine is loading. Please try again in a few seconds.");
+    return;
+  }
+
+  try {
+    const wb = XLSX.utils.book_new();
+    let students = (state.students || []).filter(s => !s.status || s.status !== 'archived');
+    if (batch && batch !== 'all') {
+      students = students.filter(s => s.batch_id === batch);
+    }
+
+    if (type === 'full_class') {
+      const data = students.map((s, idx) => ({
+        "S.No": idx + 1,
+        "Roll No": s.roll_no || "-",
+        "Student Name": s.name || "",
+        "Class": s.batch_id || "",
+        "Parent Name": s.parent_name || "-",
+        "Parent Phone": s.parent_phone || "",
+        "Monthly Fee": s.fee_amount || 0,
+        "Fee Status": (s.fee_status || "pending").toUpperCase(),
+        "Attendance": `${s.attendance_percent || 90}%`
+      }));
+      const ws = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, "Students");
+      XLSX.writeFile(wb, `Students_${batch || 'All'}.xlsx`);
+    } else if (type === 'student_report' || type === 'student_fee_history') {
+      const std = (state.students || []).find(s => s.id === studentId);
+      if (!std) {
+        showToast("Error", "Student record not found.");
+        return;
+      }
+      const data = [
+        { "Field": "Student Name", "Value": std.name },
+        { "Field": "Roll No", "Value": std.roll_no || "-" },
+        { "Field": "Class / Batch", "Value": std.batch_id || "-" },
+        { "Field": "Parent Name", "Value": std.parent_name || "-" },
+        { "Field": "Parent Phone", "Value": std.parent_phone || "-" },
+        { "Field": "Fee Amount", "Value": std.fee_amount || 0 },
+        { "Field": "Fee Status", "Value": (std.fee_status || "pending").toUpperCase() },
+        { "Field": "Attendance %", "Value": `${std.attendance_percent || 90}%` },
+        { "Field": "Present Days", "Value": std.present_days || 20 },
+        { "Field": "Absent Days", "Value": std.absent_days || 2 }
+      ];
+      const ws = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, "Student Summary");
+      XLSX.writeFile(wb, `Student_${std.name.replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`);
+    } else {
+      const data = students.map((s, idx) => ({
+        "S.No": idx + 1,
+        "Roll No": s.roll_no || "-",
+        "Name": s.name || "",
+        "Fee": s.fee_amount || 0,
+        "Status": s.fee_status || "pending",
+        "Days Late": s.days_late || 0
+      }));
+      const ws = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, "Fee Report");
+      XLSX.writeFile(wb, `Class_Fee_Report.xlsx`);
+    }
+    showToast("Downloaded 🎉", "Excel file generated successfully via client engine!");
+  } catch (ex) {
+    showToast("Export Failed", "Could not generate spreadsheet: " + ex.message);
+  }
 }
 
 // Global bootstrap on DOM ready

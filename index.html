@@ -722,6 +722,76 @@
         </div>
       </section>
 
+      <!-- ============================================== -->
+      <!-- TAB: DEDICATED EXCEL EXPORT PAGE               -->
+      <!-- ============================================== -->
+      <section id="tab-export" class="tab-screen p-4 space-y-4 hidden">
+        <!-- Page Header -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs space-y-1">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h2 class="text-sm font-bold text-slate-900">Excel Export</h2>
+                <p class="text-[11px] text-slate-500">Official, audit-ready .xlsx spreadsheets</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Pro XLSX</span>
+          </div>
+        </div>
+
+        <!-- Class / Batch Selector -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
+          <label class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">Select Class / Batch</label>
+          <div class="flex items-center space-x-2">
+            <select id="exportBatchSelect" onchange="onExportBatchChange()" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
+              <option value="all">All Classes & Batches</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Class-Level Quick Export Actions -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2.5">
+          <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Class Reports (.xlsx)</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button onclick="triggerExcelExport('full_class')" class="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold transition app-tap">
+              <i data-lucide="users" class="w-3.5 h-3.5 text-teal-600"></i>
+              <span>Full Class Directory</span>
+            </button>
+            <button onclick="triggerExcelExport('class_fee_report')" class="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold transition app-tap">
+              <i data-lucide="banknote" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Fee & Dues Ledger</span>
+            </button>
+            <button onclick="triggerExcelExport('attendance_report')" class="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold transition app-tap">
+              <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-indigo-600"></i>
+              <span>Attendance Register</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Individual Student Export Section -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Individual Student Reports</h3>
+            <span class="text-[11px] text-slate-400 font-semibold" id="exportStudentCount">0 Students</span>
+          </div>
+
+          <!-- Live Search Bar -->
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3"></i>
+            <input type="text" id="exportSearchInput" oninput="filterExportStudents()" placeholder="Search by student name or roll no..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500">
+          </div>
+
+          <!-- Student Cards List -->
+          <div id="exportStudentsContainer" class="space-y-2 max-h-[380px] overflow-y-auto no-scrollbar">
+            <!-- Dynamically populated student cards with export actions -->
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- Bottom Navigation Bar (5 Native Mobile Tabs) -->
@@ -742,12 +812,18 @@
       </button>
 
       <!-- 3. Tests -->
-      <button onclick="switchTab('tests')" id="nav-btn-tests" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
+      <button onclick="switchTab('tests')" id="nav-btn-tests" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
         <i data-lucide="award" class="w-5 h-5"></i>
         <span class="text-[10px] font-semibold mt-1">Tests</span>
       </button>
 
-      <!-- 4. Parent View -->
+      <!-- 4. Excel Export -->
+      <button onclick="switchTab('export')" id="nav-btn-export" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
+        <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold mt-1">Excel Export</span>
+      </button>
+
+      <!-- 5. Parent View -->
       <button onclick="switchTab('parent')" id="nav-btn-parent" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-400 hover:text-slate-600 transition app-tap">
         <i data-lucide="shield-check" class="w-5 h-5"></i>
         <span class="text-[10px] font-semibold mt-1">Parent App</span>
@@ -1509,6 +1585,8 @@
     </div>
   </div>
 
+  <!-- SheetJS Spreadsheet Engine (Offline / Instant Fallback) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <!-- JavaScript Application Logic -->
   <script src="/app.js"></script>
 </body>
